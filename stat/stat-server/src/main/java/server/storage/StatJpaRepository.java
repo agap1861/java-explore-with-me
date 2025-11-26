@@ -36,11 +36,9 @@ public interface StatJpaRepository extends JpaRepository<HitEntity, Long> {
             "WHERE (timestamp BETWEEN ?1 AND ?2) " +
             "GROUP BY h.app, h.uri")
     List<Stat> getStatByUniqueIpAndWithoutUris(LocalDateTime start, LocalDateTime end);
+
     @Query("SELECT new server.domain.Stat(h.app, h.uri, COUNT(h.ip)) FROM HitEntity h GROUP BY h.app, h.uri")
     List<Stat> testAll();
-
-
-
 
 
 }
