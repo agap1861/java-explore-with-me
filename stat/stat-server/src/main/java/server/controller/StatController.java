@@ -29,8 +29,8 @@ public class StatController {
     }
 
     @GetMapping("/stats")
-    public List<StatDto> getStats(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
-                                  @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
+    public List<StatDto> getStats(@RequestParam LocalDateTime start,
+                                  @RequestParam LocalDateTime end,
                                   @RequestParam(defaultValue = "") List<String> uris, @RequestParam(defaultValue = "false") boolean unique) {
         RequestFilterStat requestFilterStat = RequestFilterStat.builder()
                 .start(start)

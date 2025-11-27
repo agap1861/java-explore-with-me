@@ -1,11 +1,11 @@
-package main;
+package ewm;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MainService {
+public class MainApp {
     public static void main(String[] args) {
-        SpringApplication.run(MainService.class, args);
+        SpringApplication.run(MainApp.class, args);
     }
 }
