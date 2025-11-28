@@ -1,12 +1,19 @@
 package ewm.categories.storage;
 
 import ewm.categories.domain.Category;
+import ewm.core.BaseStorage;
+import ewm.exception.NotFoundException;
 
-public interface CategoryStorage {
+import java.util.List;
 
-    Category postCategory(Category category);
+public interface CategoryStorage extends BaseStorage<Long, Category> {
+    boolean existsByName(String name);
 
-    boolean existById(Long catId);
+    Category patch(Category category);
 
-    void deleteCategoryById(Long catId);
+    List<Category> getCategories(Integer from,Integer size);
+
+   // Category getCategoryById(Long catId) throws NotFoundException;
+
+
 }

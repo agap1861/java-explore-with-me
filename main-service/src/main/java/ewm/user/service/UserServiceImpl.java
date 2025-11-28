@@ -15,7 +15,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User postUser(User user) {
-        return userStorage.postUser(user);
+        return userStorage.save(user);
     }
 
     @Override
@@ -30,13 +30,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(Long userId) throws NotFoundException {
         validateUserId(userId);
-        userStorage.deleteByUserId(userId);
+        userStorage.delete(userId);
     }
     private void validateUserId(Long userId) throws NotFoundException {
         if (userId == null){
             throw new IllegalArgumentException("User id can not be null");
         }
-        if (!userStorage.existUserById(userId)){
+        if (!userStorage.existById(userId)){
             throw new NotFoundException("user with id "  + userId + "dose not exist");
         }
 
