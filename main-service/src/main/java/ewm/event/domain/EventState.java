@@ -1,6 +1,6 @@
 package ewm.event.domain;
 
-public enum State {
+public enum EventState {
     PENDING,
     PUBLISHED,
     CANCELED

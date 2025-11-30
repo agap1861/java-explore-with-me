@@ -31,13 +31,13 @@ public class NewEventDto {
     private LocalDateTime eventDate;
 
     @NotNull
-    private Location location;
+    private LocationDto location;
 
-    private boolean paid = false;
+    private Boolean paid = false;
 
     private Integer participantLimit = 0;
 
-    private boolean requestModeration = true;
+    private Boolean requestModeration = true;
 
     @NotNull
     @Size(max = 120, min = 3)

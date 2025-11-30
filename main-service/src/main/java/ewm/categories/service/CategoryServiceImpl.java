@@ -48,6 +48,11 @@ public class CategoryServiceImpl implements CategoryService {
         return storage.getById(catId).orElseThrow(() -> new NotFoundException("Category with id " + catId + "dose not exist"));
     }
 
+    @Override
+    public boolean existById(Long catId) {
+        return storage.existById(catId);
+    }
+
     private void validateCatId(Long catId) throws NotFoundException {
         if (catId == null) {
             throw new IllegalArgumentException("Category id can not be null");

@@ -2,7 +2,7 @@ package ewm.event.entity;
 
 
 import ewm.categories.entity.CategoryEntity;
-import ewm.event.domain.State;
+import ewm.event.domain.EventState;
 import ewm.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -45,7 +45,6 @@ public class EventEntity {
     private UserEntity initiator;
 
     @Embedded
-    @Column(name = "location", nullable = false)
     private LocationEntity location;
 
     @Column(name = "paid", nullable = false)
@@ -60,8 +59,9 @@ public class EventEntity {
     @Column(name = "requestModeration",nullable = false)
     private Boolean requestModeration;
 
-    @Column(name = "requestModeration", nullable = false)
-    private State state;
+    @Column(name = "state", nullable = false)
+    @Enumerated
+    private EventState state;
 
     @Column(name = "title", nullable = false)
     private String title;

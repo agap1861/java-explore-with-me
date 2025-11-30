@@ -2,7 +2,6 @@ package ewm.event.domain;
 
 import ewm.categories.domain.Category;
 import ewm.user.domain.User;
-import ewm.user.dto.UserDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,11 +21,11 @@ public class Event {
     private LocalDateTime eventDate;
     private User initiator;
     private Location location;
-    private boolean paid;
+    private Boolean paid;
     private Integer participantLimit;
     private LocalDateTime publishedOn;
-    private boolean requestModeration;
-    private State state;
+    private Boolean requestModeration;
+    private EventState state;
     private String title;
     private Integer views;
 

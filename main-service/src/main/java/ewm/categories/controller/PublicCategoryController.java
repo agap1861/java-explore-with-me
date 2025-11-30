@@ -2,7 +2,7 @@ package ewm.categories.controller;
 
 import ewm.categories.domain.Category;
 import ewm.categories.dto.CategoryDto;
-import ewm.categories.mapper.CategoryDtoToDomain;
+import ewm.categories.mapper.CategoryDomainDto;
 import ewm.categories.service.CategoryService;
 import ewm.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/categories")
 public class PublicCategoryController {
     private final CategoryService service;
-    private final CategoryDtoToDomain mapper;
+    private final CategoryDomainDto mapper;
 
 
     @GetMapping

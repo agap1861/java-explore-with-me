@@ -32,6 +32,17 @@ public class UserServiceImpl implements UserService {
         validateUserId(userId);
         userStorage.delete(userId);
     }
+
+    @Override
+    public User getUserById(Long userId) throws NotFoundException {
+        return userStorage.getById(userId).orElseThrow(()-> new NotFoundException("user with id " + userId + "not found"));
+    }
+
+    @Override
+    public boolean existById(Long userId) {
+        return userStorage.existById(userId);
+    }
+
     private void validateUserId(Long userId) throws NotFoundException {
         if (userId == null){
             throw new IllegalArgumentException("User id can not be null");

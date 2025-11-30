@@ -5,7 +5,7 @@ import ewm.exception.NotFoundException;
 import ewm.user.domain.User;
 import ewm.user.dto.NewUserRequest;
 import ewm.user.dto.UserDto;
-import ewm.user.mapper.UserDtoToDomain;
+import ewm.user.mapper.UserDomainDto;
 import ewm.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +19,12 @@ import java.util.List;
 @RequestMapping("/admin/users")
 public class UserAdminController {
     private final UserService userService;
-    private final UserDtoToDomain mapper;
+    private final UserDomainDto mapper;
 
     @PostMapping
     public UserDto postUser(@RequestBody @Valid NewUserRequest newUserRequest) {
-        User user = userService.postUser(mapper.dtoToDomain(newUserRequest));
-        return mapper.domainToDto(user);
+        User user = userService.postUser(mapper.toDomain(newUserRequest));
+        return mapper.toDto(user);
     }
 
     @GetMapping
@@ -32,7 +32,7 @@ public class UserAdminController {
                                   @RequestParam(defaultValue = "0") Integer from, @RequestParam("10") Integer size) {
         List<User> users = userService.getUsers(ids, from, size);
         return users.stream()
-                .map(mapper::domainToDto)
+                .map(mapper::toDto)
                 .toList();
     }
 

@@ -17,4 +17,6 @@ public interface CategoryService  {
     List<Category> getCategories(Integer from, Integer size);
 
     Category getCategoryById(Long catId) throws NotFoundException;
+
+    boolean existById(Long catId);
 }

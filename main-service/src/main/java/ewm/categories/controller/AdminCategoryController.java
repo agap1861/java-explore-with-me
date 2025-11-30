@@ -3,7 +3,7 @@ package ewm.categories.controller;
 import ewm.categories.domain.Category;
 import ewm.categories.dto.CategoryDto;
 import ewm.categories.dto.NewCategoryDto;
-import ewm.categories.mapper.CategoryDtoToDomain;
+import ewm.categories.mapper.CategoryDomainDto;
 import ewm.categories.service.CategoryService;
 import ewm.exception.DuplicateNameException;
 import ewm.exception.NotFoundException;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin/categories")
 public class AdminCategoryController {
     private final CategoryService service;
-    private final CategoryDtoToDomain mapper;
+    private final CategoryDomainDto mapper;
 
     @PostMapping
     public CategoryDto postCategory(@RequestBody @Valid NewCategoryDto dto) throws DuplicateNameException {
