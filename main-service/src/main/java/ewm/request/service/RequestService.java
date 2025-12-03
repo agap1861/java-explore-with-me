@@ -5,8 +5,10 @@ import ewm.event.dto.EventRequestStatusUpdateResult;
 import ewm.exception.ConditionsNotMetException;
 import ewm.exception.NotFoundException;
 import ewm.request.domain.Request;
+import ewm.request.entity.RequestEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface RequestService {
@@ -19,5 +21,8 @@ public interface RequestService {
     List<Request> getRequestsByEventId(Long userId, Long eventId) throws NotFoundException;
 
     List<Request> patchRequests(Long userId, Long eventId, EventRequestStatusUpdateRequest updateRequest) throws NotFoundException, ConditionsNotMetException;
+
+    Optional<Request>  getByRequesterIdAndEventId(Long requesterId, Long eventId);
+
 
 }

@@ -9,8 +9,10 @@ import ewm.event.mapper.EventDomainDto;
 import ewm.event.service.EventService;
 import ewm.exception.ConditionsNotMetException;
 import ewm.exception.NotFoundException;
+import ewm.exception.ValidateException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,19 +27,20 @@ public class PrivateEventController {
 
 
     @PostMapping
-    public EventFullDto postEvent(@PathVariable Long userId, @RequestBody @Valid NewEventDto dto) throws ConditionsNotMetException, NotFoundException {
+    @ResponseStatus(HttpStatus.CREATED)
+    public EventFullDto postEvent(@PathVariable Long userId, @RequestBody @Valid NewEventDto dto) throws NotFoundException, ValidateException {
         Event event = service.postEvent(userId, mapper.toDomain(dto));
         return mapper.toDto(event);
     }
 
     @GetMapping
-    public List<EventShortDto> getEventsByUserId(@PathVariable Long userId,
+    public List<EventFullDto> getEventsByUserId(@PathVariable Long userId,
                                                  @RequestParam(defaultValue = "0") Integer from,
                                                  @RequestParam(defaultValue = "10") Integer size) throws NotFoundException {
         List<Event> events = service.getEventsByUserId(userId, from, size);
 
         return events.stream()
-                .map(mapper::toShortDto)
+                .map(mapper::toDto)
                 .toList();
 
     }
@@ -49,8 +52,8 @@ public class PrivateEventController {
     }
 
     @PatchMapping("/{eventId}")
-    public EventFullDto patchEvent(@PathVariable Long userId, Long eventId, @RequestBody @Valid UpdateEventUserRequest dto) throws ConditionsNotMetException, NotFoundException {
-        Event event = service.patchEvent(userId, eventId, dto);
+    public EventFullDto patchEvent(@PathVariable Long userId,@PathVariable Long eventId, @RequestBody @Valid UpdateEventUserRequest dto) throws ConditionsNotMetException, NotFoundException, ValidateException {
+        Event event = service.patchByUserEvent(userId, eventId, dto);
         return mapper.toDto(event);
 
 

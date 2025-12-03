@@ -1,23 +1,29 @@
 package ewm.event.service;
 
+import client.StatClient;
+import dto.HitDto;
+import dto.StatDto;
 import ewm.categories.domain.Category;
 import ewm.categories.service.CategoryService;
-import ewm.event.domain.Event;
-import ewm.event.domain.Location;
-import ewm.event.domain.EventState;
-import ewm.event.domain.StateAction;
-import ewm.event.dto.EventFilter;
+import ewm.event.domain.*;
+import ewm.event.dto.AdminFilterEvent;
+import ewm.event.dto.PublicEventFilter;
+import ewm.event.dto.UpdateEventAdminRequest;
 import ewm.event.dto.UpdateEventUserRequest;
 import ewm.event.storage.EventStorage;
 import ewm.exception.ConditionsNotMetException;
 import ewm.exception.NotFoundException;
+import ewm.exception.ValidateException;
 import ewm.user.domain.User;
 import ewm.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -26,13 +32,15 @@ public class EventServiceImpl implements EventService {
     private final UserService userService;
     private final CategoryService categoryService;
     private final EventStorage storage;
+    private final StatClient client;
 
     @Override
-    public Event postEvent(Long userId, Event event) throws NotFoundException, ConditionsNotMetException {
+    public Event postEvent(Long userId, Event event) throws NotFoundException, ValidateException {
         User user = userService.getUserById(userId);
         validateDateEvent(event.getEventDate());
-        validateCategory(event);
+        Category category = getAndValidateCategory(event);
         event.setInitiator(user);
+        event.setCategory(category);
         return storage.save(event);
     }
 
@@ -46,17 +54,16 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event getEventByIdAndOwnerId(Long userId, Long eventId) throws NotFoundException {
-
         return getUserEventOrThrow(userId, eventId);
-
     }
 
     @Override
-    public Event patchEvent(Long userId, Long eventId, UpdateEventUserRequest patchEvent) throws NotFoundException, ConditionsNotMetException {
+    public Event patchByUserEvent(Long userId, Long eventId, UpdateEventUserRequest patchEvent) throws NotFoundException, ConditionsNotMetException, ValidateException {
         Event event = getUserEventOrThrow(userId, eventId);
         if (event.getState().equals(EventState.PUBLISHED)) {
             throw new ConditionsNotMetException("event must not be published");
         }
+
         if (patchEvent.getAnnotation() != null) {
             event.setAnnotation(patchEvent.getAnnotation());
         }
@@ -84,14 +91,28 @@ public class EventServiceImpl implements EventService {
         if (patchEvent.getParticipantLimit() != null) {
             event.setParticipantLimit(patchEvent.getParticipantLimit());
         }
+
         if (patchEvent.getRequestModeration() != null) {
             event.setRequestModeration(patchEvent.getRequestModeration());
         }
+
         if (patchEvent.getStateAction() != null) {
-            if (patchEvent.getStateAction().equals(StateAction.CANCEL_REVIEW)) {
-                event.setState(EventState.PENDING);
-            } else {
-                event.setState(EventState.CANCELED);
+            StateAction action = patchEvent.getStateAction();
+
+            switch (action) {
+                case SEND_TO_REVIEW:
+                    if (event.getState().equals(EventState.PUBLISHED)) {
+                        throw new ConditionsNotMetException("Published event cannot be sent to review");
+                    }
+                    event.setState(EventState.PENDING);
+                    break;
+
+                case CANCEL_REVIEW:
+                    if (!event.getState().equals(EventState.PENDING)) {
+                        throw new ConditionsNotMetException("Only pending events can be canceled");
+                    }
+                    event.setState(EventState.CANCELED);
+                    break;
             }
         }
         if (patchEvent.getTitle() != null) {
@@ -103,9 +124,11 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event getEventById(Long eventId) throws NotFoundException {
-        return storage.getById(eventId).orElseThrow(
+        Event event = storage.getById(eventId).orElseThrow(
                 () -> new NotFoundException("event with id " + eventId + "does not exist")
         );
+        //todo до делать Post
+        return event;
     }
 
     @Override
@@ -120,37 +143,173 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> getEventsByFilter(EventFilter filter) {
+    public List<Event> getEventsByPublicFilter(PublicEventFilter filter, String ip) throws ValidateException {
         //по зрителям сортировать
-        return storage.getEventsByFilter(filter);
+
+        if (filter.getRangeStart() != null && filter.getRangeEnd() != null && filter.getRangeEnd().isBefore(filter.getRangeStart())) {
+            throw new ValidateException("end must be after start");
+        }
+        List<Event> events = storage.getEventsByPublicFilter(filter);
+        events.stream()
+                .map(event -> {
+                    HitDto dto = new HitDto();
+                    dto.setApp("ewm-main-service");
+                    dto.setIp(ip);
+                    dto.setUri("/events/" + event.getId());
+                    dto.setTimestamp(LocalDateTime.now());
+                    return dto;
+                })
+                .forEach(client::postStat);
+/*        Map<String,Event> uris = new HashMap<>();
+        events
+                .forEach(event -> {
+                    String uri = "/events/"+event.getId();
+                    uris.put(uri,event);
+                });*/
+        List<String> uris = events.stream()
+                .map(event -> "/events/" + event.getId())
+                .toList();
+        List<StatDto> stats = client.getStats(LocalDateTime.now().minusYears(1),
+                LocalDateTime.now().plusYears(1), uris, false);
+        Map<Long, Long> views = stats.stream()
+                .collect(Collectors.toMap(
+                        s -> s.extractIdFromUri(s.getUri()),
+                        StatDto::getHits
+                ));
+
+
+        events.forEach(event ->
+                event.setViews(
+                        views.getOrDefault(event.getId(), 0L)
+                )
+        );
+        //todo : сортировка по зрителям
+        if (filter.getSort() != null && filter.getSort().equals("VIEWS")) {
+            return events.stream()
+                    .sorted(Comparator.comparing(Event::getViews))
+                    .toList();
+        }
+        return events;
+
 
     }
 
     @Override
     public Event getPublishedEventById(Long eventId) throws NotFoundException {
         Event event = getEventById(eventId);
-        if (!event.getState().equals(EventState.PUBLISHED)){
+        if (!event.getState().equals(EventState.PUBLISHED)) {
             throw new NotFoundException("event forbidden for common use");
         }
         return event;
 
     }
 
-    private void validateDateEvent(LocalDateTime eventDate) throws ConditionsNotMetException {
+    @Override
+    public boolean existsEventsByCategoryId(Long catId) {
+        return storage.existsByCategoryId(catId);
+    }
+
+    @Override
+    public Event getEventByIdWithView(Long eventId, String ip) throws NotFoundException {
+        Event event = getEventById(eventId);
+        if (!event.getState().equals(EventState.PUBLISHED)) {
+            throw new NotFoundException("event must be published");
+        }
+        HitDto dto = new HitDto();
+        dto.setIp(ip);
+        dto.setApp("ewm-main-service");
+        dto.setUri("/events/" + eventId);
+        dto.setTimestamp(LocalDateTime.now());
+        client.postStat(dto);
+        List<StatDto> stat = client.getStats(LocalDateTime.now().minusYears(1),
+                LocalDateTime.now().plusYears(1), List.of(dto.getUri()), true);
+        event.setViews(stat.getFirst().getHits());
+        return event;
+    }
+
+    @Override
+    public List<Event> getEventsByAdminFilter(AdminFilterEvent filer) {
+        return storage.getEventsByAdminFilter(filer);
+    }
+
+    @Override
+    public Event patchByAdminEvent(UpdateEventAdminRequest update, Long eventId) throws NotFoundException, ConditionsNotMetException, ValidateException {
+        Event event = storage.getById(eventId).orElseThrow(
+                () -> new NotFoundException("event with id " + eventId + "does not exist"));
+ /*       if (!event.getState().equals(EventState.PENDING)) {
+            throw new ConditionsNotMetException("event must by PENDING");
+        }*/
+        if (update.getAnnotation() != null) {
+            event.setAnnotation(update.getAnnotation());
+        }
+        if (update.getDescription() != null) {
+            event.setDescription(update.getDescription());
+        }
+        if (update.getTitle() != null) {
+            event.setTitle(update.getTitle());
+        }
+        if (update.getCategory() != null) {
+            Category category = categoryService.getCategoryById(update.getCategory());
+            event.setCategory(category);
+        }
+        if (update.getEventDate() != null) {
+            if (update.getEventDate().isBefore(LocalDateTime.now())) {
+                throw new ValidateException("date can not be in past");
+            }
+
+            if (event.getState().equals(EventState.PUBLISHED)
+                    && update.getEventDate().isBefore(event.getPublishedOn().plusHours(1))) {
+                throw new ValidateException("event start date must be no earlier than an hour after publication");
+            }
+            event.setEventDate(update.getEventDate());
+        }
+        if (update.getPaid() != null) {
+            event.setPaid(update.getPaid());
+        }
+        if (update.getParticipantLimit() != null) {
+            event.setParticipantLimit(update.getParticipantLimit());
+        }
+        if (update.getRequestModeration() != null) {
+            event.setRequestModeration(update.getRequestModeration());
+        }
+        if (update.getStateAction() != null) {
+            if (!event.getState().equals(EventState.PENDING)) {
+                throw new ConditionsNotMetException("status must be PENDING");
+            }
+            if (update.getStateAction().equals(AdminStateAction.PUBLISH_EVENT)) {
+                event.setState(EventState.PUBLISHED);
+            } else if (update.getStateAction().equals(AdminStateAction.REJECT_EVENT)) {
+                event.setState(EventState.CANCELED);
+            }
+/*            switch (update.getStateAction()) {
+                case PUBLISH_EVENT -> event.setState(EventState.PUBLISHED);
+                case REJECT_EVENT -> event.setState(EventState.CANCELED);
+            }*/
+        }
+
+
+        return storage.save(event);
+    }
+
+    @Override
+    public Event saveEvent(Event event) {
+        return storage.save(event);
+    }
+
+    private void validateDateEvent(LocalDateTime eventDate) throws ValidateException {
 
         if (eventDate.isBefore(LocalDateTime.now())) {
-            throw new ConditionsNotMetException("time must be before current time");
+            throw new ValidateException("time must be before current time");
         }
-        LocalDateTime minAvailable = eventDate.plusHours(2);
+        LocalDateTime minAvailable = LocalDateTime.now().plusHours(2);
         if (eventDate.isBefore(minAvailable)) {
-            throw new ConditionsNotMetException("not available time, must me at least throw 2 hors");
+            throw new ValidateException("not available time, must me at least throw 2 hours");
         }
     }
 
-    private void validateCategory(Event event) throws NotFoundException {
-        if (!categoryService.existById(event.getCategory().getId())) {
-            throw new NotFoundException("category dose not exist " + event.getCategory().getId());
-        }
+    private Category getAndValidateCategory(Event event) throws NotFoundException {
+        return categoryService.getCategoryById(event.getCategory().getId());
+
     }
 
     private Event getUserEventOrThrow(Long userId, Long eventId) throws NotFoundException {

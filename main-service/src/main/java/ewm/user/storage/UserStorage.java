@@ -13,4 +13,6 @@ public interface UserStorage extends BaseStorage<Long,User> {
 
     List<User> getUsersByIds(List<Long> ids);
 
+    boolean existsByEmail(String email);
+
 }

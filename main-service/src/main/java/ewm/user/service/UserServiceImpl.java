@@ -1,5 +1,6 @@
 package ewm.user.service;
 
+import ewm.exception.ConditionsNotMetException;
 import ewm.exception.NotFoundException;
 import ewm.user.domain.User;
 import ewm.user.storage.UserStorage;
@@ -14,7 +15,8 @@ public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
 
     @Override
-    public User postUser(User user) {
+    public User postUser(User user) throws ConditionsNotMetException {
+        checkEmailExists(user.getEmail());
         return userStorage.save(user);
     }
 
@@ -51,6 +53,11 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("user with id "  + userId + "dose not exist");
         }
 
+    }
+    private void checkEmailExists(String email) throws ConditionsNotMetException {
+        if (userStorage.existsByEmail(email)){
+            throw new ConditionsNotMetException("this email already busy");
+        }
     }
 
 }

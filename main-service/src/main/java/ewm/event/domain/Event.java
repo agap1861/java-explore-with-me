@@ -15,7 +15,7 @@ public class Event {
     private Long id;
     private String annotation;
     private Category category;
-    private Integer confirmedRequests;
+    private Integer confirmedRequests = 0;
     private LocalDateTime createdOn;
     private String description;
     private LocalDateTime eventDate;
@@ -27,7 +27,7 @@ public class Event {
     private Boolean requestModeration;
     private EventState state;
     private String title;
-    private Integer views;
+    private Long views = 0L;
 
 
 }

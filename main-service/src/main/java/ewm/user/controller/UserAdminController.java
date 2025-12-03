@@ -1,6 +1,7 @@
 package ewm.user.controller;
 
 
+import ewm.exception.ConditionsNotMetException;
 import ewm.exception.NotFoundException;
 import ewm.user.domain.User;
 import ewm.user.dto.NewUserRequest;
@@ -22,14 +23,16 @@ public class UserAdminController {
     private final UserDomainDto mapper;
 
     @PostMapping
-    public UserDto postUser(@RequestBody @Valid NewUserRequest newUserRequest) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDto postUser(@RequestBody @Valid NewUserRequest newUserRequest) throws ConditionsNotMetException {
         User user = userService.postUser(mapper.toDomain(newUserRequest));
         return mapper.toDto(user);
+
     }
 
     @GetMapping
     public List<UserDto> getUsers(@RequestParam(defaultValue = "") List<Long> ids,
-                                  @RequestParam(defaultValue = "0") Integer from, @RequestParam("10") Integer size) {
+                                  @RequestParam(defaultValue = "0") Integer from, @RequestParam(defaultValue = "10") Integer size) {
         List<User> users = userService.getUsers(ids, from, size);
         return users.stream()
                 .map(mapper::toDto)

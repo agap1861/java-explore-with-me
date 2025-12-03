@@ -16,4 +16,6 @@ public interface EventJpaRepository extends JpaRepository<EventEntity,Long>, Jpa
     List<EventEntity> getEventsByUserIdAndFilters(Long userId,Integer from, Integer size);
 
     List<EventEntity> findAllByIdIn(List<Long> ids);
+
+    boolean existsByCategoryId(Long catId);
 }

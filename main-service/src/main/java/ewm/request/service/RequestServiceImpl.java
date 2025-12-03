@@ -18,6 +18,7 @@ import org.springframework.boot.context.config.ConfigDataNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,8 +32,15 @@ public class RequestServiceImpl implements RequestService {
     public Request postRequest(Request request) throws NotFoundException, ConditionsNotMetException {
         //проверить был ли такой запрос уже
         Event event = eventService.getEventById(request.getEvent().getId());
-        if (userService.existById(request.getRequester().getId())) {
-            throw new NotFoundException("user with id " + request.getRequester().getId() + "does not exist");
+        Optional<Request> check = getByRequesterIdAndEventId(request.getRequester().getId(), event.getId());
+        if (!userService.existById(request.getRequester().getId())) {
+            throw new NotFoundException("user does not exist with id " + request.getRequester().getId());
+        }
+        if (check.isPresent()) {
+            throw new ConditionsNotMetException("request already exist");
+        }
+        if (!userService.existById(request.getRequester().getId())) {
+            throw new NotFoundException("user with id " + request.getRequester().getId() + " does not exist");
         }
         if (event.getInitiator().getId().equals(request.getRequester().getId())) {
             throw new ConditionsNotMetException("the initiator cannot create a request for his event");
@@ -40,12 +48,15 @@ public class RequestServiceImpl implements RequestService {
         if (!event.getState().equals(EventState.PUBLISHED)) {
             throw new ConditionsNotMetException("user can not participate in unpublished event");
         }
-        if (event.getParticipantLimit() != 0 && event.getConfirmedRequests() >= event.getParticipantLimit()) {
-            throw new ConditionsNotMetException("already limit participate");
+        Integer confirmed = event.getConfirmedRequests() == null ? 0 : event.getConfirmedRequests();
 
+        if (event.getParticipantLimit() != 0 && confirmed >= event.getParticipantLimit()) {
+            throw new ConditionsNotMetException("event is already full");
         }
-        if (!event.getRequestModeration()) {
+        if (!event.getRequestModeration() || event.getParticipantLimit() == 0) {
             request.setStatus(RequestStatus.CONFIRMED);
+            event.setConfirmedRequests(confirmed + 1);
+            eventService.saveEvent(event);
         }
         return storage.save(request);
 
@@ -88,26 +99,44 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public List<Request> patchRequests(Long userId, Long eventId, EventRequestStatusUpdateRequest updateRequest) throws NotFoundException, ConditionsNotMetException {
         Event event = eventService.getEventById(eventId);
+        Integer confirmed = event.getConfirmedRequests() == null ? 0 : event.getConfirmedRequests();
+
+
         if (!event.getInitiator().getId().equals(userId)) {
             throw new IllegalArgumentException("event does not belong to user");
         }
         if (!event.getRequestModeration() || event.getParticipantLimit() == 0) {
             return storage.getRequestsByIds(updateRequest.getRequestIds());
         }
-        if (event.getConfirmedRequests().equals(event.getParticipantLimit())) {
+        if (confirmed.equals(event.getParticipantLimit())) {
             throw new ConditionsNotMetException("event has already limit participant");
         }
-        if (!event.getState().equals(EventState.PENDING)) {
-            throw new ConditionsNotMetException("event  must have status PENDING ");
+        if (!event.getState().equals(EventState.PUBLISHED)) {
+            throw new ConditionsNotMetException("event  must have status PUBLISHED ");
         }
         List<Request> requests = storage.getRequestsByIds(updateRequest.getRequestIds());
         for (Request request : requests) {
             if (!request.getEvent().getId().equals(eventId)) {
                 throw new IllegalArgumentException("request with id " + request.getId() + "dose not belong to event");
             }
+            if (request.getStatus() != RequestStatus.PENDING) {
+                throw new ConditionsNotMetException("Only pending requests can be updated");
+            }
+            if (confirmed >= event.getParticipantLimit()){
+                request.setStatus(RequestStatus.REJECTED);
+                continue;
+            }
+            if (updateRequest.getStatus().equals(EventRequestStatus.CONFIRMED)){
+                request.setStatus(RequestStatus.CONFIRMED);
+                confirmed++;
+                event.setConfirmedRequests(confirmed);
+            }else if (updateRequest.getStatus().equals(EventRequestStatus.REJECTED)){
+                request.setStatus(RequestStatus.REJECTED);
+            }
+
         }
 
-        if (updateRequest.getStatus().equals(EventRequestStatus.CONFIRMED)) {
+/*        if (updateRequest.getStatus().equals(EventRequestStatus.CONFIRMED)) {
             for (Request request : requests) {
                 if (event.getConfirmedRequests().equals(event.getParticipantLimit())) {
                     request.setStatus(RequestStatus.REJECTED);
@@ -122,10 +151,16 @@ public class RequestServiceImpl implements RequestService {
             requests = requests.stream()
                     .peek(request -> request.setStatus(RequestStatus.REJECTED)).toList();
 
-        }
+        }*/
+        eventService.saveEvent(event);
         storage.saveAll(requests);
         return requests;
 
 
+    }
+
+    @Override
+    public Optional<Request> getByRequesterIdAndEventId(Long requesterId, Long eventId) {
+        return storage.getByRequesterIdAndEventId(requesterId, eventId);
     }
 }

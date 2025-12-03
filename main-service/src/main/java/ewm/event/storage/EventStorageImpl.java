@@ -1,11 +1,11 @@
 package ewm.event.storage;
 
 import ewm.event.domain.Event;
-import ewm.event.dto.EventFilter;
+import ewm.event.dto.AdminFilterEvent;
+import ewm.event.dto.PublicEventFilter;
 import ewm.event.entity.EventEntity;
 import ewm.event.mapper.EventDomainEntity;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,7 +20,8 @@ import java.util.Optional;
 public class EventStorageImpl implements EventStorage {
     private final EventJpaRepository storage;
     private final EventDomainEntity mapper;
-    private final EventSpecification specification;
+    private final EventPublicSpecification publicSpecification;
+    private final EventAdminSpecification adminSpecification;
 
 
     @Override
@@ -62,10 +63,10 @@ public class EventStorageImpl implements EventStorage {
     }
 
     @Override
-    public List<Event> getEventsByFilter(EventFilter filter) {
-        Specification<EventEntity> spec = specification.getEventsByFilter(filter);
+    public List<Event> getEventsByPublicFilter(PublicEventFilter filter) {
+        Specification<EventEntity> spec = publicSpecification.getEventsByFilter(filter);
         Sort sort = Sort.unsorted();
-        if (filter.getSort().equals("EVENT_DATE")) {
+        if (filter.getSort() != null && filter.getSort().equals("EVENT_DATE")) {
             sort = Sort.by("eventDate").ascending();
         }
         Pageable pageable = PageRequest.of(filter.getFrom() / filter.getSize(),
@@ -76,4 +77,29 @@ public class EventStorageImpl implements EventStorage {
                 .map(mapper::toDomain)
                 .toList();
     }
+
+    @Override
+    public boolean existsByCategoryId(Long catId) {
+        return storage.existsByCategoryId(catId);
+    }
+
+    @Override
+    public List<Event> getEventsByAdminFilter(AdminFilterEvent filterEvent) {
+        List<Long> users = filterEvent.getUsers();
+        List<Long> categories = filterEvent.getCategories();
+        if (categories != null && categories.size() == 1 && categories.getFirst().equals(0L)) {
+            filterEvent.setCategories(null);
+        }
+        if (users != null && users.size() == 1 && users.getFirst().equals(0L)) {
+            filterEvent.setUsers(null);
+        }
+        Specification<EventEntity> specification = adminSpecification.getEventsByFilter(filterEvent);
+        Pageable pageable = PageRequest.of(filterEvent.getFrom() / filterEvent.getSize(), filterEvent.getSize());
+        List<EventEntity> eventEntities = storage.findAll(specification, pageable).getContent();
+        return eventEntities.stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+
 }

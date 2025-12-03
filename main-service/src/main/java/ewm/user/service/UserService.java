@@ -1,5 +1,6 @@
 package ewm.user.service;
 
+import ewm.exception.ConditionsNotMetException;
 import ewm.exception.NotFoundException;
 import ewm.user.domain.User;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -7,7 +8,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 
 public interface UserService {
-     User postUser(User user);
+     User postUser(User user) throws ConditionsNotMetException;
 
     List<User> getUsers(List<Long> ids, Integer from, Integer size);
 

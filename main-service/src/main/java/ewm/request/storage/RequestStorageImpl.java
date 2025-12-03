@@ -32,8 +32,8 @@ public class RequestStorageImpl implements RequestStorage {
     }
 
     @Override
-    public Optional<Request> getById(Long aLong) {
-        return Optional.empty();
+    public Optional<Request> getById(Long id) {
+        return storage.findById(id).map(mapper::toDomain);
     }
 
     @Override
@@ -68,5 +68,10 @@ public class RequestStorageImpl implements RequestStorage {
         return requestEntities.stream()
                 .map(mapper::toDomain)
                 .toList();
+    }
+
+    @Override
+    public Optional<Request> getByRequesterIdAndEventId(Long requesterId, Long eventId) {
+        return storage.findByRequesterIdAndEventId(requesterId,eventId).map(mapper::toDomain);
     }
 }

@@ -13,4 +13,6 @@ public interface UserJpaRepository extends JpaRepository<UserEntity, Long> {
 
     @Query(value = "SELECT * FROM users ORDER BY ID ASC LIMIT ?2 OFFSET ?1", nativeQuery = true)
     List<UserEntity> getByFilter(Integer from, Integer size);
+
+    boolean existsByEmail(String email);
 }

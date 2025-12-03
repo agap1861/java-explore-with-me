@@ -2,8 +2,7 @@ package ewm.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import ewm.event.domain.Location;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,15 +14,16 @@ import java.time.format.DateTimeFormatter;
 @Data
 @NoArgsConstructor
 public class NewEventDto {
-    @Size(max = 2000, min = 20)
-    @NotNull
+    @Size(max = 2000, min = 20, message = "size of annotation does not correct")
+    @NotBlank
     private String annotation;
 
     @NotNull
     private Long category;
 
-    @NotNull
+
     @Size(max = 7000, min = 20)
+    @NotBlank
     private String description;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -35,12 +35,13 @@ public class NewEventDto {
 
     private Boolean paid = false;
 
+    @PositiveOrZero
     private Integer participantLimit = 0;
 
     private Boolean requestModeration = true;
 
-    @NotNull
-    @Size(max = 120, min = 3)
+    @NotBlank
+    @Size(max = 120, min = 3,message = "size of title does not correct")
     private String title;
 
 

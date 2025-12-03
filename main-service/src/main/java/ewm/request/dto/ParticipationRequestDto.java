@@ -1,5 +1,6 @@
 package ewm.request.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import ewm.event.domain.EventState;
 import ewm.request.domain.RequestStatus;
 import lombok.Data;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ParticipationRequestDto {
     private Long id;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     private LocalDateTime created;
     private Long event;
     private Long requester;

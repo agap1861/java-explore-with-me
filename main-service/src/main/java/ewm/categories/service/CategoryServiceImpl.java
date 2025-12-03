@@ -2,6 +2,9 @@ package ewm.categories.service;
 
 import ewm.categories.domain.Category;
 import ewm.categories.storage.CategoryStorage;
+import ewm.event.service.EventService;
+import ewm.event.storage.EventStorage;
+import ewm.exception.ConditionsNotMetException;
 import ewm.exception.DuplicateNameException;
 import ewm.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -13,25 +16,28 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryStorage storage;
+    private final EventStorage eventStorage;
 
     @Override
-    public Category postCategory(Category category) throws DuplicateNameException {
+    public Category postCategory(Category category) throws ConditionsNotMetException {
         validateUniqueName(category.getName());
         return storage.save(category);
     }
 
     @Override
-    public void deleteCategory(Long catId) throws NotFoundException {
-        //Нужна еще проверка на события !
+    public void deleteCategory(Long catId) throws NotFoundException, ConditionsNotMetException {
+        existsEventsByCategoryId(catId);
         validateCatId(catId);
         storage.delete(catId);
-
-
     }
 
     @Override
-    public Category patchCategory(Long catId, Category category) throws NotFoundException, DuplicateNameException {
+    public Category patchCategory(Long catId, Category category) throws NotFoundException, ConditionsNotMetException {
         validateCatId(catId);
+        Category old = storage.getById(catId).get();
+        if (old.getName().equals(category.getName())){
+            return old;
+        }
         validateUniqueName(category.getName());
         category.setId(catId);
         return storage.patch(category);
@@ -45,7 +51,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category getCategoryById(Long catId) throws NotFoundException {
         validateCatId(catId);
-        return storage.getById(catId).orElseThrow(() -> new NotFoundException("Category with id " + catId + "dose not exist"));
+        return storage.getById(catId).orElseThrow(
+                () -> new NotFoundException("Category with id " + catId + "dose not exist")
+        );
     }
 
     @Override
@@ -62,11 +70,17 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
-    private void validateUniqueName(String name) throws DuplicateNameException {
+    private void validateUniqueName(String name) throws ConditionsNotMetException {
         if (storage.existsByName(name))
-            throw new DuplicateNameException("name already exist " + name);
+            throw new ConditionsNotMetException("name already exist " + name);
 
 
+    }
+
+    private void existsEventsByCategoryId(Long catId) throws ConditionsNotMetException {
+        if (eventStorage.existsByCategoryId(catId)) {
+            throw new ConditionsNotMetException("category connect with event");
+        }
     }
 
 }

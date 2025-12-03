@@ -11,5 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class LocationEntity {
     private Float lat;
-    private Float loan;
+    private Float lon;
 }

@@ -1,7 +1,7 @@
 package ewm.event.storage;
 
 import ewm.event.domain.EventState;
-import ewm.event.dto.EventFilter;
+import ewm.event.dto.PublicEventFilter;
 import ewm.event.entity.EventEntity;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
@@ -10,9 +10,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
-public class EventSpecification {
+public class EventPublicSpecification {
 
-    public Specification<EventEntity> getEventsByFilter(EventFilter filter) {
+    public Specification<EventEntity> getEventsByFilter(PublicEventFilter filter) {
         Specification<EventEntity> spec = Specification.where(isPublished());
 
         if (filter.getText() != null && !filter.getText().isBlank()) {

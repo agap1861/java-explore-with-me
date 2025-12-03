@@ -35,6 +35,11 @@ public class UserStorageImpl implements UserStorage {
     }
 
     @Override
+    public boolean existsByEmail(String email) {
+        return storage.existsByEmail(email);
+    }
+
+    @Override
     public User save(User domain) {
         UserEntity entity = storage.save(mapper.toEntity(domain));
         return mapper.toDomain(entity);

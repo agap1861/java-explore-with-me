@@ -6,6 +6,7 @@ import ewm.compilation.mapper.CompilationDomainEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -34,5 +35,21 @@ public class CompilationStorageImpl implements CompilationStorage {
     @Override
     public Optional<Compilation> getById(Long id) {
         return storage.findById(id).map(mapper::toDomain);
+    }
+
+    @Override
+    public List<Compilation> getCompilationPinned(Boolean pinned, Integer from, Integer size) {
+        List<CompilationEntity> compilationEntities = storage.getCompilationPinned(pinned,from,size);
+        return compilationEntities.stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Compilation> getCompilation(Integer from, Integer size) {
+        List<CompilationEntity> compilations = storage.getCompilation(from,size);
+        return compilations.stream()
+                .map(mapper::toDomain)
+                .toList();
     }
 }

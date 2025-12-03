@@ -9,4 +9,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring", uses = {UserDomainEntity.class, LocationDomainEntity.class, CategoryEntityToDomain.class})
 public interface EventDomainEntity extends BaseDomainEntityMapper<Event, EventEntity> {
+
 }

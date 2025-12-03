@@ -7,6 +7,7 @@ import ewm.request.dto.ParticipationRequestDto;
 import ewm.request.mapper.RequestDomainDto;
 import ewm.request.service.RequestService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class PrivateRequestController {
     private final RequestDomainDto mapper;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ParticipationRequestDto postRequest(@PathVariable Long userId, @RequestParam Long eventId) throws ConditionsNotMetException, NotFoundException {
         Request request = service.postRequest(mapper.toNewRequest(userId,eventId));
         return mapper.toDto(request);

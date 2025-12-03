@@ -5,6 +5,7 @@ import ewm.categories.dto.CategoryDto;
 import ewm.categories.dto.NewCategoryDto;
 import ewm.categories.mapper.CategoryDomainDto;
 import ewm.categories.service.CategoryService;
+import ewm.exception.ConditionsNotMetException;
 import ewm.exception.DuplicateNameException;
 import ewm.exception.NotFoundException;
 import jakarta.validation.Valid;
@@ -20,21 +21,21 @@ public class AdminCategoryController {
     private final CategoryDomainDto mapper;
 
     @PostMapping
-    public CategoryDto postCategory(@RequestBody @Valid NewCategoryDto dto) throws DuplicateNameException {
+    @ResponseStatus(HttpStatus.CREATED)
+    public CategoryDto postCategory(@RequestBody @Valid NewCategoryDto dto) throws DuplicateNameException, ConditionsNotMetException {
         Category category = service.postCategory(mapper.dtoToDomain(dto));
-        return mapper.domainToDto(category);
+        return  mapper.domainToDto(category);
     }
 
-    @GetMapping("/{catId}")
+    @DeleteMapping("/{catId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCategory(@PathVariable Long catId) throws NotFoundException {
-        //Проверка что категория не привязана к событию !!
+    public void deleteCategory(@PathVariable Long catId) throws NotFoundException, ConditionsNotMetException {
         service.deleteCategory(catId);
     }
 
     @PatchMapping("/{catId}")
     @ResponseStatus(HttpStatus.OK)
-    public CategoryDto patchCategory(@PathVariable Long catId, @RequestBody @Valid NewCategoryDto dto) throws DuplicateNameException, NotFoundException {
+    public CategoryDto patchCategory(@PathVariable Long catId, @RequestBody @Valid NewCategoryDto dto) throws DuplicateNameException, NotFoundException, ConditionsNotMetException {
 
         Category category = service.patchCategory(catId,mapper.dtoToDomain(dto));
         return mapper.domainToDto(category);

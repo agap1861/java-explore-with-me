@@ -12,10 +12,9 @@ public class NewUserRequest {
     @Size(min = 6,max = 254,message = "wrong size of email")
     @Email(message = "email not correct")
     @NotBlank(message = "email contains blank")
-    @NotNull
     private String email;
 
     @Size(min = 2, max = 250, message = "wrong  size of name")
-    @NotNull
+    @NotBlank
     private String name;
 }

@@ -33,6 +33,6 @@ public class RequestEntity {
 
     @Column(name = "status", nullable = false)
     @Enumerated
-    RequestStatus staus;
+    RequestStatus status;
 
 }

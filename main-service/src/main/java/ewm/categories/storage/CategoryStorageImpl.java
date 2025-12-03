@@ -3,7 +3,6 @@ package ewm.categories.storage;
 import ewm.categories.domain.Category;
 import ewm.categories.entity.CategoryEntity;
 import ewm.categories.mapper.CategoryEntityToDomain;
-import ewm.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
