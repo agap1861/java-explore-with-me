@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import server.exception.ValidateException;
 import server.mapper.HitDtoToDomain;
 import server.mapper.StatDomainToDto;
 import server.service.StatService;
@@ -30,7 +31,7 @@ public class StatController {
     @GetMapping("/stats")
     public List<StatDto> getStats(@RequestParam LocalDateTime start,
                                   @RequestParam LocalDateTime end,
-                                  @RequestParam(defaultValue = "") List<String> uris, @RequestParam(defaultValue = "false") boolean unique) {
+                                  @RequestParam(defaultValue = "") List<String> uris, @RequestParam(defaultValue = "false") boolean unique) throws ValidateException {
         RequestFilterStat requestFilterStat = RequestFilterStat.builder()
                 .start(start)
                 .end(end)
