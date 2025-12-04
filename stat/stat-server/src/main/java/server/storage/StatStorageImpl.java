@@ -45,7 +45,12 @@ public class StatStorageImpl implements StatStorage {
     }
 
     @Override
-    public List<Stat> testAll() {
-        return repository.testAll();
+    public List<Stat> getAllUnique() {
+        return repository.getAllUnique();
+    }
+
+    @Override
+    public List<Stat> getAllUnUnique() {
+        return repository.getAllUnUnique();
     }
 }

@@ -18,7 +18,9 @@ public interface StatStorage {
 
     List<Stat> getStatByUniqueIpAndWithoutUris(RequestFilterStat requestFilterStat);
 
-    List<Stat> testAll();
+    List<Stat> getAllUnique();
+
+    List<Stat> getAllUnUnique();
 
 
 }

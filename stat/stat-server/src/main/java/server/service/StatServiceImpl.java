@@ -22,14 +22,21 @@ public class StatServiceImpl implements StatService {
 
     @Override
     public List<Stat> getStat(RequestFilterStat request) {
+
         if (request.getUnique()) {
-            if (request.getUris().isEmpty()) {
+            if (request.getUris().size() == 1 && request.getUris().getFirst().equals("/events")) {
+                return storage.getAllUnique();
+
+            } else if (request.getUris().isEmpty()) {
                 return storage.getStatByUniqueIpAndWithoutUris(request);
             } else {
                 return storage.getStatByUniqueIpANdUris(request);
             }
         } else {
-            if (request.getUris().isEmpty()) {
+            if (request.getUris().size() == 1 && request.getUris().getFirst().equals("/events")) {
+                return storage.getAllUnUnique();
+
+            } else if (request.getUris().isEmpty()) {
                 return storage.getStatByUnuniqueIpAndWithoutUris(request);
             } else {
                 return storage.getStatByUnuniqueIpAndUris(request);
