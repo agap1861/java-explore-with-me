@@ -1,10 +1,11 @@
 package ewm.core;
 
-import lombok.RequiredArgsConstructor;
 
+/*
 @RequiredArgsConstructor
 public abstract class BaseStorageImpl<Id, D, E> implements BaseStorage<Id, D> {
-   /* private final BaseMapper<D, E> mapper;
+   */
+/* private final BaseMapper<D, E> mapper;
     protected abstract  JpaRepository<E,Id> storage();
 
 
@@ -45,6 +46,8 @@ class UserStorage extends BaseStorageImpl<Long, User, UserEntity> implements ewm
     @Override
     public List<User> getUsersByIds(List<Long> ids) {
         return List.of();
-    }*/
+    }*//*
+
 }
+*/
 
