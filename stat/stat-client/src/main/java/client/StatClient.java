@@ -2,9 +2,7 @@ package client;
 
 import dto.HitDto;
 import dto.StatDto;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -14,12 +12,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
-@Component
 public class StatClient {
     private RestClient restClient;
     private String statUrl;
 
-    public StatClient(RestClient restClient, @Value("http://localhost:9090") String statUrl) {
+    public StatClient(RestClient restClient, String statUrl) {
         this.restClient = restClient;
         this.statUrl = statUrl;
     }
@@ -39,14 +36,18 @@ public class StatClient {
 
     public List<StatDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        URI uri = UriComponentsBuilder
+        UriComponentsBuilder builder = UriComponentsBuilder
                 .fromHttpUrl(statUrl + "/stats")
                 .queryParam("start", start.format(format))
                 .queryParam("end", end.format(format))
-                .queryParam("uris", uris.toArray())
-                .queryParam("unique", unique)
-                .build()
-                .toUri();
+                .queryParam("unique", unique);
+
+        if (uris != null && !uris.isEmpty()) {
+            for (String uri : uris) {
+                builder.queryParam("uris", uri);
+            }
+        }
+        URI uri = builder.build().toUri();
         return restClient
                 .get()
                 .uri(uri)

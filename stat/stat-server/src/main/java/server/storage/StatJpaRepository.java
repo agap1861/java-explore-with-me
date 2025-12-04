@@ -1,10 +1,10 @@
 package server.storage;
 
 
-import server.domain.Stat;
-import server.entity.HitEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import server.domain.Stat;
+import server.entity.HitEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,8 +41,11 @@ public interface StatJpaRepository extends JpaRepository<HitEntity, Long> {
             "ORDER BY COUNT(h.ip) DESC")
     List<Stat> getStatByUniqueIpAndWithoutUris(LocalDateTime start, LocalDateTime end);
 
+    @Query("SELECT new server.domain.Stat(h.app, h.uri, COUNT(DISTINCT h.ip)) FROM HitEntity h GROUP BY h.app, h.uri")
+    List<Stat> getAllUnique();
+
     @Query("SELECT new server.domain.Stat(h.app, h.uri, COUNT(h.ip)) FROM HitEntity h GROUP BY h.app, h.uri")
-    List<Stat> testAll();
+    List<Stat> getAllUnUnique();
 
 
 }

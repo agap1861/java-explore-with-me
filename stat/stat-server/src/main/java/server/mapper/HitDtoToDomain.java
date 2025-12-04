@@ -1,8 +1,8 @@
 package server.mapper;
 
-import server.domain.Hit;
 import dto.HitDto;
 import org.mapstruct.Mapper;
+import server.domain.Hit;
 
 @Mapper(componentModel = "spring")
 public interface HitDtoToDomain {

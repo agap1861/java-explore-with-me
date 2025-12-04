@@ -1,0 +1,48 @@
+package ewm.user.controller;
+
+
+import ewm.exception.ConditionsNotMetException;
+import ewm.exception.NotFoundException;
+import ewm.user.domain.User;
+import ewm.user.dto.NewUserRequest;
+import ewm.user.dto.UserDto;
+import ewm.user.mapper.UserDomainDto;
+import ewm.user.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/admin/users")
+public class UserAdminController {
+    private final UserService userService;
+    private final UserDomainDto mapper;
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDto postUser(@RequestBody @Valid NewUserRequest newUserRequest) throws ConditionsNotMetException {
+        User user = userService.postUser(mapper.toDomain(newUserRequest));
+        return mapper.toDto(user);
+
+    }
+
+    @GetMapping
+    public List<UserDto> getUsers(@RequestParam(defaultValue = "") List<Long> ids,
+                                  @RequestParam(defaultValue = "0") Integer from, @RequestParam(defaultValue = "10") Integer size) {
+        List<User> users = userService.getUsers(ids, from, size);
+        return users.stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
+    @DeleteMapping("/{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUserById(@PathVariable Long userId) throws NotFoundException {
+        userService.deleteUserById(userId);
+
+    }
+}
