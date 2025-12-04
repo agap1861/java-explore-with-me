@@ -5,6 +5,7 @@ import ewm.categories.storage.CategoryStorage;
 import ewm.event.storage.EventStorage;
 import ewm.exception.ConditionsNotMetException;
 import ewm.exception.NotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +18,14 @@ public class CategoryServiceImpl implements CategoryService {
     private final EventStorage eventStorage;
 
     @Override
+    @Transactional
     public Category postCategory(Category category) throws ConditionsNotMetException {
         validateUniqueName(category.getName());
         return storage.save(category);
     }
 
     @Override
+    @Transactional
     public void deleteCategory(Long catId) throws NotFoundException, ConditionsNotMetException {
         existsEventsByCategoryId(catId);
         validateCatId(catId);
@@ -30,6 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public Category patchCategory(Long catId, Category category) throws NotFoundException, ConditionsNotMetException {
         Category old = getCategoryById(catId);
         if (old.getName().equals(category.getName())) {

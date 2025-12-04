@@ -16,6 +16,7 @@ import ewm.exception.NotFoundException;
 import ewm.exception.ValidateException;
 import ewm.user.domain.User;
 import ewm.user.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ public class EventServiceImpl implements EventService {
     private final StatClient client;
 
     @Override
+    @Transactional
     public Event postEvent(Long userId, Event event) throws NotFoundException, ValidateException {
         User user = userService.getUserById(userId);
         validateDateEvent(event.getEventDate());
@@ -58,6 +60,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public Event patchByUserEvent(Long userId, Long eventId, UpdateEventUserRequest patchEvent) throws NotFoundException, ConditionsNotMetException, ValidateException {
         Event event = getUserEventOrThrow(userId, eventId);
         if (event.getState().equals(EventState.PUBLISHED)) {
@@ -203,6 +206,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public Event patchByAdminEvent(UpdateEventAdminRequest update, Long eventId) throws NotFoundException, ConditionsNotMetException, ValidateException {
         Event event = storage.getById(eventId).orElseThrow(
                 () -> new NotFoundException("event with id " + eventId + "does not exist"));
@@ -255,8 +259,14 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public Event saveEvent(Event event) {
         return storage.save(event);
+    }
+
+    @Override
+    public List<Event> getAllByIds(List<Long> ids) {
+        return storage.findAll(ids);
     }
 
     private void validateDateEvent(LocalDateTime eventDate) throws ValidateException {

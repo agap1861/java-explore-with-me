@@ -34,4 +34,6 @@ public interface EventService {
     Event patchByAdminEvent(UpdateEventAdminRequest update, Long eventId) throws NotFoundException, ConditionsNotMetException, ValidateException;
 
     Event saveEvent(Event event);
+
+    List<Event> getAllByIds(List<Long> ids);
 }

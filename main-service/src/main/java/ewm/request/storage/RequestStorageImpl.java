@@ -22,13 +22,13 @@ public class RequestStorageImpl implements RequestStorage {
     }
 
     @Override
-    public void delete(Long aLong) {
-
+    public void delete(Long id) {
+        storage.deleteById(id);
     }
 
     @Override
-    public boolean existById(Long aLong) {
-        return false;
+    public boolean existById(Long id) {
+        return storage.existsById(id);
     }
 
     @Override

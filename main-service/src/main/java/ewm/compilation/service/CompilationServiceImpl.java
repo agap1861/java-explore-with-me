@@ -6,12 +6,11 @@ import ewm.compilation.storage.CompilationStorage;
 import ewm.event.domain.Event;
 import ewm.event.service.EventService;
 import ewm.exception.NotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static ewm.exception.CheckedFunction.wrap;
 
 @Service
 @RequiredArgsConstructor
@@ -21,16 +20,16 @@ public class CompilationServiceImpl implements CompilationService {
 
 
     @Override
+    @Transactional
     public Compilation postCompilation(Compilation compilation) {
-        List<Event> events = compilation.getEvents().stream()
-                .map(wrap(eventId ->
-                        eventService.getEventById(eventId.getId())))
-                .toList();
+        List<Long> idsEvent = compilation.getEvents().stream().map(Event::getId).toList();
+        List<Event> events = eventService.getAllByIds(idsEvent);
         compilation.setEvents(events);
         return storage.save(compilation);
     }
 
     @Override
+    @Transactional
     public void deleteCompilation(Long compId) throws NotFoundException {
         if (!storage.existById(compId)) {
             throw new NotFoundException("compilation with id " + compId + "does not exist");
@@ -39,6 +38,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
+    @Transactional
     public Compilation patchCompilation(Long compId, UpdateCompilationRequest dto) throws NotFoundException {
         Compilation compilation = storage.getById(compId).orElseThrow(
                 () -> new NotFoundException("compilation with id " + compId + "does not exist")
@@ -66,9 +66,7 @@ public class CompilationServiceImpl implements CompilationService {
 
     private Compilation updateCompilation(Compilation compilation, UpdateCompilationRequest dto) {
         if (dto.getEvents() != null) {
-            List<Event> events = dto.getEvents().stream()
-                    .map(wrap(eventService::getEventById))
-                    .toList();
+            List<Event> events = eventService.getAllByIds(dto.getEvents().stream().toList());
             compilation.setEvents(events);
         }
         if (dto.getPinned() != null) {

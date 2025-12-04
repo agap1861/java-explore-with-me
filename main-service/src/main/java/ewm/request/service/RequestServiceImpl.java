@@ -11,6 +11,7 @@ import ewm.request.domain.Request;
 import ewm.request.domain.RequestStatus;
 import ewm.request.storage.RequestStorage;
 import ewm.user.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ public class RequestServiceImpl implements RequestService {
 
 
     @Override
+    @Transactional
     public Request postRequest(Request request) throws NotFoundException, ConditionsNotMetException {
         Event event = eventService.getEventById(request.getEvent().getId());
         Optional<Request> check = getByRequesterIdAndEventId(request.getRequester().getId(), event.getId());
@@ -67,6 +69,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    @Transactional
     public Request cancelRequest(Long userId, Long requestId) throws NotFoundException, ConditionsNotMetException {
         if (!userService.existById(userId)) {
             throw new NotFoundException("user with id " + userId + "does not exist");
@@ -93,6 +96,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    @Transactional
     public List<Request> patchRequests(Long userId, Long eventId, EventRequestStatusUpdateRequest updateRequest) throws NotFoundException, ConditionsNotMetException {
         Event event = eventService.getEventById(eventId);
         Integer confirmed = event.getConfirmedRequests() == null ? 0 : event.getConfirmedRequests();

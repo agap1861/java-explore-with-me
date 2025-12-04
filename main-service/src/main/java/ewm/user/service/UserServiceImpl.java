@@ -4,6 +4,7 @@ import ewm.exception.ConditionsNotMetException;
 import ewm.exception.NotFoundException;
 import ewm.user.domain.User;
 import ewm.user.storage.UserStorage;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
 
     @Override
+    @Transactional
     public User postUser(User user) throws ConditionsNotMetException {
         checkEmailExists(user.getEmail());
         return userStorage.save(user);
@@ -30,6 +32,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUserById(Long userId) throws NotFoundException {
         validateUserId(userId);
         userStorage.delete(userId);
