@@ -9,9 +9,7 @@ import ewm.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-
 import java.util.List;
-
 
 import static ewm.exception.CheckedFunction.wrap;
 

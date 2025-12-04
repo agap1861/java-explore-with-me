@@ -1,7 +1,6 @@
 package ewm.request.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import ewm.event.domain.EventState;
 import ewm.request.domain.RequestStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;

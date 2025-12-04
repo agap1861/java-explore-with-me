@@ -5,7 +5,6 @@ import ewm.compilation.dto.CompilationDto;
 import ewm.compilation.mapper.CompilationDomainDto;
 import ewm.compilation.service.CompilationService;
 import ewm.exception.NotFoundException;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

@@ -7,7 +7,6 @@ import ewm.compilation.dto.NewCompilationDto;
 import ewm.compilation.dto.UpdateCompilationRequest;
 import ewm.compilation.mapper.CompilationDomainDto;
 import ewm.compilation.service.CompilationService;
-import ewm.compilation.storage.CompilationStorage;
 import ewm.exception.NotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

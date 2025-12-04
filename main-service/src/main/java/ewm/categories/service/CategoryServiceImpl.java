@@ -2,10 +2,8 @@ package ewm.categories.service;
 
 import ewm.categories.domain.Category;
 import ewm.categories.storage.CategoryStorage;
-import ewm.event.service.EventService;
 import ewm.event.storage.EventStorage;
 import ewm.exception.ConditionsNotMetException;
-import ewm.exception.DuplicateNameException;
 import ewm.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,7 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Category patchCategory(Long catId, Category category) throws NotFoundException, ConditionsNotMetException {
         validateCatId(catId);
         Category old = storage.getById(catId).get();
-        if (old.getName().equals(category.getName())){
+        if (old.getName().equals(category.getName())) {
             return old;
         }
         validateUniqueName(category.getName());

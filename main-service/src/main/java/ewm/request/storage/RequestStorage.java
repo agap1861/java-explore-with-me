@@ -3,7 +3,6 @@ package ewm.request.storage;
 import ewm.core.BaseStorage;
 import ewm.request.domain.Request;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -17,8 +16,7 @@ public interface RequestStorage extends BaseStorage<Long, Request> {
 
     List<Request> saveAll(List<Request> requests);
 
-    Optional<Request> getByRequesterIdAndEventId(Long requesterId,Long eventId);
-
+    Optional<Request> getByRequesterIdAndEventId(Long requesterId, Long eventId);
 
 
 }

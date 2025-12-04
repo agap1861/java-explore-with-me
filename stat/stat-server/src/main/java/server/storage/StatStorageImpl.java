@@ -1,11 +1,11 @@
 package server.storage;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 import server.controller.RequestFilterStat;
 import server.domain.Hit;
 import server.domain.Stat;
-import lombok.RequiredArgsConstructor;
 import server.mapper.HitDomainToEntity;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 

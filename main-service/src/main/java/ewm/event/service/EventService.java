@@ -15,7 +15,7 @@ public interface EventService {
 
     Event postEvent(Long userId, Event event) throws NotFoundException, ValidateException;
 
-    List<Event> getEventsByUserId(Long userId, Integer from,Integer size) throws NotFoundException;
+    List<Event> getEventsByUserId(Long userId, Integer from, Integer size) throws NotFoundException;
 
     Event getEventByIdAndOwnerId(Long userId, Long eventId) throws NotFoundException;
 
@@ -33,11 +33,11 @@ public interface EventService {
 
     boolean existsEventsByCategoryId(Long catId);
 
-    Event getEventByIdWithView(Long eventId,String ip) throws NotFoundException;
+    Event getEventByIdWithView(Long eventId, String ip) throws NotFoundException;
 
     List<Event> getEventsByAdminFilter(AdminFilterEvent filer);
 
-    Event patchByAdminEvent(UpdateEventAdminRequest update,Long eventId) throws NotFoundException, ConditionsNotMetException, ValidateException;
+    Event patchByAdminEvent(UpdateEventAdminRequest update, Long eventId) throws NotFoundException, ConditionsNotMetException, ValidateException;
 
     Event saveEvent(Event event);
 }

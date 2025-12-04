@@ -1,9 +1,8 @@
 package ewm.event.controller;
 
 import ewm.event.domain.Event;
-import ewm.event.dto.PublicEventFilter;
 import ewm.event.dto.EventFullDto;
-import ewm.event.dto.EventShortDto;
+import ewm.event.dto.PublicEventFilter;
 import ewm.event.mapper.EventDomainDto;
 import ewm.event.service.EventService;
 import ewm.exception.NotFoundException;
@@ -29,15 +28,15 @@ public class PublicEventController {
     public List<EventFullDto> getEventsByFilter(PublicEventFilter filter, HttpServletRequest request) throws ValidateException {
 
 
-        List<Event> events = service.getEventsByPublicFilter(filter,request.getRemoteAddr());
+        List<Event> events = service.getEventsByPublicFilter(filter, request.getRemoteAddr());
         return events.stream()
                 .map(mapper::toDto)
                 .toList();
     }
 
     @GetMapping("/{id}")
-    public EventFullDto getEventById(@PathVariable Long id,HttpServletRequest request) throws NotFoundException {
-        Event event = service.getEventByIdWithView(id,request.getRemoteAddr());
+    public EventFullDto getEventById(@PathVariable Long id, HttpServletRequest request) throws NotFoundException {
+        Event event = service.getEventByIdWithView(id, request.getRemoteAddr());
         return mapper.toDto(event);
     }
 }

@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Long userId) throws NotFoundException {
-        return userStorage.getById(userId).orElseThrow(()-> new NotFoundException("user with id " + userId + "not found"));
+        return userStorage.getById(userId).orElseThrow(() -> new NotFoundException("user with id " + userId + "not found"));
     }
 
     @Override
@@ -46,16 +46,17 @@ public class UserServiceImpl implements UserService {
     }
 
     private void validateUserId(Long userId) throws NotFoundException {
-        if (userId == null){
+        if (userId == null) {
             throw new IllegalArgumentException("User id can not be null");
         }
-        if (!userStorage.existById(userId)){
-            throw new NotFoundException("user with id "  + userId + "dose not exist");
+        if (!userStorage.existById(userId)) {
+            throw new NotFoundException("user with id " + userId + "dose not exist");
         }
 
     }
+
     private void checkEmailExists(String email) throws ConditionsNotMetException {
-        if (userStorage.existsByEmail(email)){
+        if (userStorage.existsByEmail(email)) {
             throw new ConditionsNotMetException("this email already busy");
         }
     }

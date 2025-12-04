@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class CompilationEntity {
     )
     private List<EventEntity> events;
 
-    @Column(name = "pinned",nullable = false)
+    @Column(name = "pinned", nullable = false)
     private Boolean pinned;
 
     @Column(name = "title", nullable = false)

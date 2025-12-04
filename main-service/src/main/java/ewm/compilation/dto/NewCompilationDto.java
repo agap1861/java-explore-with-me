@@ -12,7 +12,7 @@ import java.util.Set;
 public class NewCompilationDto {
     private Set<Long> events;
     private Boolean pinned = false;
-    @Size(max = 50,min = 1, message = "wrong size for title")
+    @Size(max = 50, min = 1, message = "wrong size for title")
     @NotBlank
     private String title;
 }

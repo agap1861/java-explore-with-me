@@ -6,7 +6,6 @@ import ewm.categories.mapper.CategoryEntityToDomain;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.parser.Entity;
 import java.util.List;
 import java.util.Optional;
 

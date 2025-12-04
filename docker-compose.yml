@@ -5,6 +5,7 @@ services:
     ports:
       - "9090:9090"
     environment:
+      SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://stats-db:5432/stat
       SPRING_DATASOURCE_USERNAME: stat
       SPRING_DATASOURCE_PASSWORD: stat
@@ -22,7 +23,7 @@ services:
       - POSTGRES_USER=stat
       - POSTGRES_DB=stat
     healthcheck:
-      test: pg_isready -q -d $POSTGRES_DB -U $$POSTGRES_USER
+      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
       timeout: 5s
       interval: 5s
       retries: 10

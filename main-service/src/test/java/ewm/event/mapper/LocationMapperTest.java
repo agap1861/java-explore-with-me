@@ -6,7 +6,7 @@ import ewm.event.entity.LocationEntity;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LocationMapperTest {
     private final LocationDomainDto domainDtoMapper = Mappers.getMapper(LocationDomainDto.class);

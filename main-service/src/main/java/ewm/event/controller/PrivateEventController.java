@@ -2,7 +2,6 @@ package ewm.event.controller;
 
 import ewm.event.domain.Event;
 import ewm.event.dto.EventFullDto;
-import ewm.event.dto.EventShortDto;
 import ewm.event.dto.NewEventDto;
 import ewm.event.dto.UpdateEventUserRequest;
 import ewm.event.mapper.EventDomainDto;
@@ -35,8 +34,8 @@ public class PrivateEventController {
 
     @GetMapping
     public List<EventFullDto> getEventsByUserId(@PathVariable Long userId,
-                                                 @RequestParam(defaultValue = "0") Integer from,
-                                                 @RequestParam(defaultValue = "10") Integer size) throws NotFoundException {
+                                                @RequestParam(defaultValue = "0") Integer from,
+                                                @RequestParam(defaultValue = "10") Integer size) throws NotFoundException {
         List<Event> events = service.getEventsByUserId(userId, from, size);
 
         return events.stream()
@@ -52,7 +51,7 @@ public class PrivateEventController {
     }
 
     @PatchMapping("/{eventId}")
-    public EventFullDto patchEvent(@PathVariable Long userId,@PathVariable Long eventId, @RequestBody @Valid UpdateEventUserRequest dto) throws ConditionsNotMetException, NotFoundException, ValidateException {
+    public EventFullDto patchEvent(@PathVariable Long userId, @PathVariable Long eventId, @RequestBody @Valid UpdateEventUserRequest dto) throws ConditionsNotMetException, NotFoundException, ValidateException {
         Event event = service.patchByUserEvent(userId, eventId, dto);
         return mapper.toDto(event);
 

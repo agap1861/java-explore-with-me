@@ -24,7 +24,7 @@ public class AdminCategoryController {
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryDto postCategory(@RequestBody @Valid NewCategoryDto dto) throws DuplicateNameException, ConditionsNotMetException {
         Category category = service.postCategory(mapper.dtoToDomain(dto));
-        return  mapper.domainToDto(category);
+        return mapper.domainToDto(category);
     }
 
     @DeleteMapping("/{catId}")
@@ -37,7 +37,7 @@ public class AdminCategoryController {
     @ResponseStatus(HttpStatus.OK)
     public CategoryDto patchCategory(@PathVariable Long catId, @RequestBody @Valid NewCategoryDto dto) throws DuplicateNameException, NotFoundException, ConditionsNotMetException {
 
-        Category category = service.patchCategory(catId,mapper.dtoToDomain(dto));
+        Category category = service.patchCategory(catId, mapper.dtoToDomain(dto));
         return mapper.domainToDto(category);
     }
 

@@ -1,11 +1,9 @@
 package ewm.event.dto;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import ewm.event.domain.EventState;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
-
 
 import java.time.LocalDateTime;
 import java.util.List;

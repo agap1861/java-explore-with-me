@@ -1,15 +1,14 @@
 package ewm.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import ewm.event.domain.Location;
-import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Data
 @NoArgsConstructor
@@ -41,7 +40,7 @@ public class NewEventDto {
     private Boolean requestModeration = true;
 
     @NotBlank
-    @Size(max = 120, min = 3,message = "size of title does not correct")
+    @Size(max = 120, min = 3, message = "size of title does not correct")
     private String title;
 
 

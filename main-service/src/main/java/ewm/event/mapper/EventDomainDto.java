@@ -25,7 +25,7 @@ public interface EventDomainDto {
 
     EventShortDto toShortDto(Event event);
 
-    default LocalDateTime mapTime(){
+    default LocalDateTime mapTime() {
         return LocalDateTime.now();
     }
 }

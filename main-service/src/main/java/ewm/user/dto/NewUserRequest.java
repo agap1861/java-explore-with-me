@@ -1,6 +1,8 @@
 package ewm.user.dto;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class NewUserRequest {
-    @Size(min = 6,max = 254,message = "wrong size of email")
+    @Size(min = 6, max = 254, message = "wrong size of email")
     @Email(message = "email not correct")
     @NotBlank(message = "email contains blank")
     private String email;

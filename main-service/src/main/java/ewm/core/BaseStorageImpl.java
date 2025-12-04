@@ -1,16 +1,9 @@
 package ewm.core;
 
-import ewm.user.domain.User;
-import ewm.user.entity.UserEntity;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
-public  abstract class BaseStorageImpl<Id, D, E>  implements  BaseStorage<Id,D>{
+public abstract class BaseStorageImpl<Id, D, E> implements BaseStorage<Id, D> {
    /* private final BaseMapper<D, E> mapper;
     protected abstract  JpaRepository<E,Id> storage();
 

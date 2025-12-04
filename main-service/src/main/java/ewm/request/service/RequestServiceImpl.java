@@ -4,17 +4,14 @@ import ewm.event.domain.Event;
 import ewm.event.domain.EventRequestStatus;
 import ewm.event.domain.EventState;
 import ewm.event.dto.EventRequestStatusUpdateRequest;
-import ewm.event.dto.EventRequestStatusUpdateResult;
 import ewm.event.service.EventService;
 import ewm.exception.ConditionsNotMetException;
 import ewm.exception.NotFoundException;
 import ewm.request.domain.Request;
 import ewm.request.domain.RequestStatus;
 import ewm.request.storage.RequestStorage;
-import ewm.user.domain.User;
 import ewm.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.config.ConfigDataNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -122,15 +119,15 @@ public class RequestServiceImpl implements RequestService {
             if (request.getStatus() != RequestStatus.PENDING) {
                 throw new ConditionsNotMetException("Only pending requests can be updated");
             }
-            if (confirmed >= event.getParticipantLimit()){
+            if (confirmed >= event.getParticipantLimit()) {
                 request.setStatus(RequestStatus.REJECTED);
                 continue;
             }
-            if (updateRequest.getStatus().equals(EventRequestStatus.CONFIRMED)){
+            if (updateRequest.getStatus().equals(EventRequestStatus.CONFIRMED)) {
                 request.setStatus(RequestStatus.CONFIRMED);
                 confirmed++;
                 event.setConfirmedRequests(confirmed);
-            }else if (updateRequest.getStatus().equals(EventRequestStatus.REJECTED)){
+            } else if (updateRequest.getStatus().equals(EventRequestStatus.REJECTED)) {
                 request.setStatus(RequestStatus.REJECTED);
             }
 

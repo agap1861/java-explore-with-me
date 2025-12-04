@@ -1,10 +1,10 @@
 package server.storage;
 
 
-import server.domain.Stat;
-import server.entity.HitEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import server.domain.Stat;
+import server.entity.HitEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;

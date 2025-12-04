@@ -90,16 +90,18 @@ public class ErrorHandler {
                 LocalDateTime.now()
         );
     }
+
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleMethodArgumentTypeMismatchException(final MethodArgumentTypeMismatchException e){
-        return  new ApiError(
+    public ApiError handleMethodArgumentTypeMismatchException(final MethodArgumentTypeMismatchException e) {
+        return new ApiError(
                 e.getMessage(),
                 "Incorrectly made request",
                 HttpStatus.BAD_REQUEST,
                 LocalDateTime.now()
         );
     }
+
     @ExceptionHandler(MissingServletRequestParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleMissingParams(MissingServletRequestParameterException e) {
@@ -110,6 +112,7 @@ public class ErrorHandler {
                 LocalDateTime.now()
         );
     }
+
     @ExceptionHandler(ValidateException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleMissingParams(ValidateException e) {

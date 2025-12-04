@@ -9,11 +9,11 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface UserDomainDto {
 
-     User toDomain(NewUserRequest dto);
+    User toDomain(NewUserRequest dto);
 
-     UserDto toDto(User user);
+    UserDto toDto(User user);
 
-     UserShortDto toShortDto(User user);
+    UserShortDto toShortDto(User user);
 
 
 }

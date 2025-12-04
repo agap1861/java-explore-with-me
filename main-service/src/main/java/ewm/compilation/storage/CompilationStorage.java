@@ -10,8 +10,7 @@ public interface CompilationStorage extends BaseStorage<Long, Compilation> {
 
     List<Compilation> getCompilationPinned(Boolean pinned, Integer from, Integer size);
 
-    List<Compilation>  getCompilation(Integer from, Integer size);
-
+    List<Compilation> getCompilation(Integer from, Integer size);
 
 
 }

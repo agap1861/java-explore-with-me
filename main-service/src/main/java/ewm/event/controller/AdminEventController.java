@@ -3,7 +3,6 @@ package ewm.event.controller;
 import ewm.event.domain.Event;
 import ewm.event.dto.AdminFilterEvent;
 import ewm.event.dto.EventFullDto;
-import ewm.event.dto.EventShortDto;
 import ewm.event.dto.UpdateEventAdminRequest;
 import ewm.event.mapper.EventDomainDto;
 import ewm.event.service.EventService;
@@ -33,7 +32,7 @@ public class AdminEventController {
 
     @PatchMapping("/{eventId}")
     public EventFullDto patchEvent(@Valid @RequestBody UpdateEventAdminRequest update, @PathVariable Long eventId) throws ConditionsNotMetException, NotFoundException, ValidateException {
-        Event event = service.patchByAdminEvent(update,eventId);
+        Event event = service.patchByAdminEvent(update, eventId);
         return mapper.toDto(event);
 
     }

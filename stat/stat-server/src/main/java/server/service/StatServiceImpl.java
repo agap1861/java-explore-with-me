@@ -1,10 +1,10 @@
 package server.service;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import server.controller.RequestFilterStat;
 import server.domain.Hit;
 import server.domain.Stat;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import server.storage.StatStorage;
 
 import java.util.List;

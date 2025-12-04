@@ -72,6 +72,6 @@ public class RequestStorageImpl implements RequestStorage {
 
     @Override
     public Optional<Request> getByRequesterIdAndEventId(Long requesterId, Long eventId) {
-        return storage.findByRequesterIdAndEventId(requesterId,eventId).map(mapper::toDomain);
+        return storage.findByRequesterIdAndEventId(requesterId, eventId).map(mapper::toDomain);
     }
 }

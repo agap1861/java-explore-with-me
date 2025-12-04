@@ -7,13 +7,13 @@ import ewm.exception.NotFoundException;
 
 import java.util.List;
 
-public interface CategoryService  {
+public interface CategoryService {
 
     Category postCategory(Category category) throws DuplicateNameException, ConditionsNotMetException;
 
     void deleteCategory(Long catId) throws NotFoundException, ConditionsNotMetException;
 
-    Category patchCategory(Long catId,Category category) throws NotFoundException, DuplicateNameException, ConditionsNotMetException;
+    Category patchCategory(Long catId, Category category) throws NotFoundException, DuplicateNameException, ConditionsNotMetException;
 
     List<Category> getCategories(Integer from, Integer size);
 

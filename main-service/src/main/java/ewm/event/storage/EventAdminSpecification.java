@@ -17,11 +17,11 @@ public class EventAdminSpecification {
         if (filter.getUsers() != null && !filter.getUsers().isEmpty()) {
             spec = spec.and(hasUsers(filter.getUsers()));
         }
-        if (filter.getStates() != null && !filter.getStates().isEmpty()){
+        if (filter.getStates() != null && !filter.getStates().isEmpty()) {
             spec = spec.and(hasState(filter.getStates()));
         }
 
-        if (filter.getCategories()!=null && !filter.getCategories().isEmpty()){
+        if (filter.getCategories() != null && !filter.getCategories().isEmpty()) {
             spec = spec.and(hasCategories(filter.getCategories()));
         }
         if (filter.getRangeStart() != null) {

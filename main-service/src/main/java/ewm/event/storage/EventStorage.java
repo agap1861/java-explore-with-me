@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface EventStorage extends BaseStorage<Long, Event> {
 
-    List<Event> getEventsByUserAndFilter(Long userId,Integer from,Integer size);
+    List<Event> getEventsByUserAndFilter(Long userId, Integer from, Integer size);
 
     List<Event> findAll(List<Long> ids);
 

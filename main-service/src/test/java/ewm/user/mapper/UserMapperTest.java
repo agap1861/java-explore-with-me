@@ -8,7 +8,8 @@ import ewm.user.entity.UserEntity;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 
 class UserMapperTest {
@@ -28,7 +29,7 @@ class UserMapperTest {
     }
 
     @Test
-    public void shouldCorrectlyMapDomainToDto(){
+    public void shouldCorrectlyMapDomainToDto() {
         User user = new User();
         user.setId(1L);
         user.setName("name");
@@ -36,14 +37,14 @@ class UserMapperTest {
 
         UserDto dto = domainDtoMapper.toDto(user);
 
-        assertEquals(user.getId(),dto.getId());
-        assertEquals(user.getName(),dto.getName());
-        assertEquals(user.getEmail(),dto.getEmail());
+        assertEquals(user.getId(), dto.getId());
+        assertEquals(user.getName(), dto.getName());
+        assertEquals(user.getEmail(), dto.getEmail());
 
     }
 
     @Test
-    public void shouldCorrectlyMapDomainToShortDto(){
+    public void shouldCorrectlyMapDomainToShortDto() {
         User user = new User();
         user.setId(1L);
         user.setName("name");
@@ -51,12 +52,12 @@ class UserMapperTest {
 
         UserShortDto dto = domainDtoMapper.toShortDto(user);
 
-        assertEquals(user.getId(),dto.getId());
-        assertEquals(user.getName(),dto.getName());
+        assertEquals(user.getId(), dto.getId());
+        assertEquals(user.getName(), dto.getName());
     }
 
     @Test
-    public void shouldCorrectlyMapDomainToEntity(){
+    public void shouldCorrectlyMapDomainToEntity() {
         User user = new User();
         user.setId(1L);
         user.setName("name");
@@ -64,12 +65,13 @@ class UserMapperTest {
 
         UserEntity entity = domainEntityMapper.toEntity(user);
 
-        assertEquals(user.getId(),entity.getId());
-        assertEquals(user.getName(),entity.getName());
-        assertEquals(user.getEmail(),entity.getEmail());
+        assertEquals(user.getId(), entity.getId());
+        assertEquals(user.getName(), entity.getName());
+        assertEquals(user.getEmail(), entity.getEmail());
     }
+
     @Test
-    public void shouldCorrectlyMapEntityToDomain(){
+    public void shouldCorrectlyMapEntityToDomain() {
         UserEntity entity = new UserEntity();
         entity.setId(1L);
         entity.setName("name");
@@ -77,11 +79,10 @@ class UserMapperTest {
 
         User user = domainEntityMapper.toDomain(entity);
 
-        assertEquals(entity.getId(),user.getId());
-        assertEquals(entity.getName(),user.getName());
-        assertEquals(entity.getEmail(),user.getEmail());
+        assertEquals(entity.getId(), user.getId());
+        assertEquals(entity.getName(), user.getName());
+        assertEquals(entity.getEmail(), user.getEmail());
     }
-
 
 
 }

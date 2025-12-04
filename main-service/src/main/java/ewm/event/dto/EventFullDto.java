@@ -3,9 +3,7 @@ package ewm.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import ewm.categories.dto.CategoryDto;
-
 import ewm.event.domain.EventState;
-
 import ewm.user.dto.UserShortDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;

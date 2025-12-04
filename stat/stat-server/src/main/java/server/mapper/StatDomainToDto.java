@@ -1,8 +1,8 @@
 package server.mapper;
 
-import server.domain.Stat;
 import dto.StatDto;
 import org.mapstruct.Mapper;
+import server.domain.Stat;
 
 @Mapper(componentModel = "spring")
 public interface StatDomainToDto {

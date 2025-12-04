@@ -12,14 +12,12 @@ public interface CategoryDomainDto {
 
     CategoryDto domainToDto(Category category);
 
-    default Category fromId(Long id){
+    default Category fromId(Long id) {
         if (id == null) return null;
         Category category = new Category();
         category.setId(id);
         return category;
     }
-
-
 
 
 }

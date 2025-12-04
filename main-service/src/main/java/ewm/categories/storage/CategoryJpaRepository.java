@@ -1,7 +1,6 @@
 package ewm.categories.storage;
 
 import ewm.categories.entity.CategoryEntity;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

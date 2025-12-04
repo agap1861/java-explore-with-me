@@ -22,7 +22,7 @@ public class PrivateRequestController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ParticipationRequestDto postRequest(@PathVariable Long userId, @RequestParam Long eventId) throws ConditionsNotMetException, NotFoundException {
-        Request request = service.postRequest(mapper.toNewRequest(userId,eventId));
+        Request request = service.postRequest(mapper.toNewRequest(userId, eventId));
         return mapper.toDto(request);
 
     }
@@ -37,8 +37,8 @@ public class PrivateRequestController {
     }
 
     @PatchMapping("/{requestId}/cancel")
-    public ParticipationRequestDto canselRequest(@PathVariable Long userId,@PathVariable Long requestId) throws ConditionsNotMetException, NotFoundException {
-        Request request = service.cancelRequest(userId,requestId);
+    public ParticipationRequestDto canselRequest(@PathVariable Long userId, @PathVariable Long requestId) throws ConditionsNotMetException, NotFoundException {
+        Request request = service.cancelRequest(userId, requestId);
         return mapper.toDto(request);
 
     }

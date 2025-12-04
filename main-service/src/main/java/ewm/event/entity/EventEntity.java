@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -22,7 +21,7 @@ public class EventEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "annotation", nullable = false,length = 2000)
+    @Column(name = "annotation", nullable = false, length = 2000)
     private String annotation;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -35,7 +34,7 @@ public class EventEntity {
     @Column(name = "createdOn", nullable = false)
     private LocalDateTime createdOn;
 
-    @Column(name = "description", nullable = false,length = 7000)
+    @Column(name = "description", nullable = false, length = 7000)
     private String description;
 
     @Column(name = "eventDate", nullable = false)
@@ -57,14 +56,14 @@ public class EventEntity {
     @Column(name = "publishedOn")
     private LocalDateTime publishedOn;
 
-    @Column(name = "requestModeration",nullable = false)
+    @Column(name = "requestModeration", nullable = false)
     private Boolean requestModeration;
 
     @Column(name = "state", nullable = false)
     @Enumerated(EnumType.STRING)
     private EventState state;
 
-    @Column(name = "title", nullable = false,length = 120)
+    @Column(name = "title", nullable = false, length = 120)
     private String title;
 
 }

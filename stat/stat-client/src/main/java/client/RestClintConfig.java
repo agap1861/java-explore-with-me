@@ -12,8 +12,9 @@ public class RestClintConfig {
     public RestClient restClient() {
         return RestClient.builder().build();
     }
+
     @Bean
-    public StatClient statClient(RestClient restClient, @Value ("${stat.url}")String statUrl) {
+    public StatClient statClient(RestClient restClient, @Value("${stat.url}") String statUrl) {
         return new StatClient(restClient, statUrl);
     }
 }

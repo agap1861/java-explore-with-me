@@ -13,7 +13,7 @@ public class StatDto {
     private String uri;
     private Long hits;
 
-    public Long extractIdFromUri(String uri){
-        return Long.parseLong(uri.replace("/events/",""));
+    public Long extractIdFromUri(String uri) {
+        return Long.parseLong(uri.replace("/events/", ""));
     }
 }

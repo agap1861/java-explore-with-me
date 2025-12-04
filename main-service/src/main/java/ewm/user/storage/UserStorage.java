@@ -6,7 +6,7 @@ import ewm.user.domain.User;
 
 import java.util.List;
 
-public interface UserStorage extends BaseStorage<Long,User> {
+public interface UserStorage extends BaseStorage<Long, User> {
 
 
     List<User> getUserByFilter(Integer from, Integer size);
