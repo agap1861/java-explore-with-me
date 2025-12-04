@@ -31,8 +31,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category patchCategory(Long catId, Category category) throws NotFoundException, ConditionsNotMetException {
-        validateCatId(catId);
-        Category old = storage.getById(catId).get();
+        Category old = getCategoryById(catId);
         if (old.getName().equals(category.getName())) {
             return old;
         }
@@ -48,9 +47,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category getCategoryById(Long catId) throws NotFoundException {
-        validateCatId(catId);
         return storage.getById(catId).orElseThrow(
-                () -> new NotFoundException("Category with id " + catId + "dose not exist")
+                () -> new NotFoundException("Category with id " + catId + "does not exist")
         );
     }
 
@@ -64,7 +62,7 @@ public class CategoryServiceImpl implements CategoryService {
             throw new IllegalArgumentException("Category id can not be null");
         }
         if (!storage.existById(catId)) {
-            throw new NotFoundException("Category with id " + catId + "dose not exist");
+            throw new NotFoundException("Category with id " + catId + "does not exist");
         }
     }
 

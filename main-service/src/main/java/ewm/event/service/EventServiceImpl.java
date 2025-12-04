@@ -95,6 +95,9 @@ public class EventServiceImpl implements EventService {
         if (patchEvent.getRequestModeration() != null) {
             event.setRequestModeration(patchEvent.getRequestModeration());
         }
+        if (patchEvent.getTitle() != null) {
+            event.setTitle(patchEvent.getTitle());
+        }
 
         if (patchEvent.getStateAction() != null) {
             StateAction action = patchEvent.getStateAction();
@@ -115,9 +118,7 @@ public class EventServiceImpl implements EventService {
                     break;
             }
         }
-        if (patchEvent.getTitle() != null) {
-            event.setTitle(patchEvent.getTitle());
-        }
+
         return storage.save(event);
 
     }
@@ -127,7 +128,6 @@ public class EventServiceImpl implements EventService {
         Event event = storage.getById(eventId).orElseThrow(
                 () -> new NotFoundException("event with id " + eventId + "does not exist")
         );
-        //todo до делать Post
         return event;
     }
 
@@ -137,15 +137,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public boolean existEventsByIds(List<Long> ids) {
-        List<Event> events = storage.findAll(ids);
-        return events.size() == ids.size();
-    }
-
-    @Override
     public List<Event> getEventsByPublicFilter(PublicEventFilter filter, String ip) throws ValidateException {
-        //по зрителям сортировать
-
         if (filter.getRangeStart() != null && filter.getRangeEnd() != null && filter.getRangeEnd().isBefore(filter.getRangeStart())) {
             throw new ValidateException("end must be after start");
         }
@@ -160,12 +152,6 @@ public class EventServiceImpl implements EventService {
                     return dto;
                 })
                 .forEach(client::postStat);
-/*        Map<String,Event> uris = new HashMap<>();
-        events
-                .forEach(event -> {
-                    String uri = "/events/"+event.getId();
-                    uris.put(uri,event);
-                });*/
         List<String> uris = events.stream()
                 .map(event -> "/events/" + event.getId())
                 .toList();
@@ -183,7 +169,6 @@ public class EventServiceImpl implements EventService {
                         views.getOrDefault(event.getId(), 0L)
                 )
         );
-        //todo : сортировка по зрителям
         if (filter.getSort() != null && filter.getSort().equals("VIEWS")) {
             return events.stream()
                     .sorted(Comparator.comparing(Event::getViews))
@@ -192,21 +177,6 @@ public class EventServiceImpl implements EventService {
         return events;
 
 
-    }
-
-    @Override
-    public Event getPublishedEventById(Long eventId) throws NotFoundException {
-        Event event = getEventById(eventId);
-        if (!event.getState().equals(EventState.PUBLISHED)) {
-            throw new NotFoundException("event forbidden for common use");
-        }
-        return event;
-
-    }
-
-    @Override
-    public boolean existsEventsByCategoryId(Long catId) {
-        return storage.existsByCategoryId(catId);
     }
 
     @Override
@@ -236,9 +206,6 @@ public class EventServiceImpl implements EventService {
     public Event patchByAdminEvent(UpdateEventAdminRequest update, Long eventId) throws NotFoundException, ConditionsNotMetException, ValidateException {
         Event event = storage.getById(eventId).orElseThrow(
                 () -> new NotFoundException("event with id " + eventId + "does not exist"));
- /*       if (!event.getState().equals(EventState.PENDING)) {
-            throw new ConditionsNotMetException("event must by PENDING");
-        }*/
         if (update.getAnnotation() != null) {
             event.setAnnotation(update.getAnnotation());
         }
@@ -281,10 +248,6 @@ public class EventServiceImpl implements EventService {
             } else if (update.getStateAction().equals(AdminStateAction.REJECT_EVENT)) {
                 event.setState(EventState.CANCELED);
             }
-/*            switch (update.getStateAction()) {
-                case PUBLISH_EVENT -> event.setState(EventState.PUBLISHED);
-                case REJECT_EVENT -> event.setState(EventState.CANCELED);
-            }*/
         }
 
 

@@ -22,7 +22,6 @@ import java.util.List;
 public class PrivateEventController {
     private final EventService service;
     private final EventDomainDto mapper;
-    //Нужно еще второй сервис подключить
 
 
     @PostMapping

@@ -25,13 +25,7 @@ public interface EventService {
 
     boolean existById(Long eventId);
 
-    boolean existEventsByIds(List<Long> ids);
-
     List<Event> getEventsByPublicFilter(PublicEventFilter filter, String ip) throws ValidateException;
-
-    Event getPublishedEventById(Long eventId) throws NotFoundException;
-
-    boolean existsEventsByCategoryId(Long catId);
 
     Event getEventByIdWithView(Long eventId, String ip) throws NotFoundException;
 

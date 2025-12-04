@@ -41,5 +41,4 @@ public interface RequestDomainDto {
     default LocalDateTime mapTime() {
         return LocalDateTime.now();
     }
-    //Проверить маппер
 }

@@ -27,7 +27,6 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public Request postRequest(Request request) throws NotFoundException, ConditionsNotMetException {
-        //проверить был ли такой запрос уже
         Event event = eventService.getEventById(request.getEvent().getId());
         Optional<Request> check = getByRequesterIdAndEventId(request.getRequester().getId(), event.getId());
         if (!userService.existById(request.getRequester().getId())) {
@@ -132,23 +131,6 @@ public class RequestServiceImpl implements RequestService {
             }
 
         }
-
-/*        if (updateRequest.getStatus().equals(EventRequestStatus.CONFIRMED)) {
-            for (Request request : requests) {
-                if (event.getConfirmedRequests().equals(event.getParticipantLimit())) {
-                    request.setStatus(RequestStatus.REJECTED);
-                } else {
-                    request.setStatus(RequestStatus.CONFIRMED);
-                    event.setConfirmedRequests(event.getConfirmedRequests() + 1);
-                }
-
-            }
-
-        } else {
-            requests = requests.stream()
-                    .peek(request -> request.setStatus(RequestStatus.REJECTED)).toList();
-
-        }*/
         eventService.saveEvent(event);
         storage.saveAll(requests);
         return requests;
