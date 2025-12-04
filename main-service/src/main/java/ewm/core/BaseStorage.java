@@ -3,14 +3,14 @@ package ewm.core;
 
 import java.util.Optional;
 
-public interface BaseStorage<Id, T> {
+public interface BaseStorage<ID, T> {
     T save(T domain);
 
-    void delete(Id id);
+    void delete(ID id);
 
-    boolean existById(Id id);
+    boolean existById(ID id);
 
-    Optional<T> getById(Id id);
+    Optional<T> getById(ID id);
 }
 
 
