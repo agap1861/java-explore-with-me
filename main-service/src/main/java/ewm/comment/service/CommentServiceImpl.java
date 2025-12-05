@@ -40,11 +40,11 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public Comment patchComment(Long authorId, Long eventId, Long commentId, Comment patchComment) throws NotFoundException, ConditionsNotMetException {
-/*        Comment comment = getCommentById(commentId);
+        Comment comment = getCommentById(commentId);
         validateAuthorAndEvent(comment, authorId, eventId);
         comment.setText(patchComment.getText());
-        return storage.save(comment);*/
-        return null;
+        return storage.save(comment);
+
 
     }
 
