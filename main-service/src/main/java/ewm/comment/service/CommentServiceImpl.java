@@ -25,14 +25,15 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public Comment postComment(Comment comment, Long authorId, Long eventId) throws NotFoundException, ConditionsNotMetException {
-        Event event = eventService.getEventById(eventId);
+ /*       Event event = eventService.getEventById(eventId);
         if (!event.getState().equals(EventState.PUBLISHED)) {
             throw new ConditionsNotMetException("event must be published");
         }
         User author = userService.getUserById(authorId);
         comment.setAuthor(author);
         comment.setEvent(event);
-        return storage.save(comment);
+        return storage.save(comment);*/
+        return null;
     }
 
     @Override
