@@ -3,7 +3,7 @@ package ewm.comment.service;
 import ewm.comment.domain.Comment;
 import ewm.comment.storage.CommentStorage;
 
-import ewm.event.domain.Event;
+
 import ewm.event.domain.EventState;
 import ewm.event.service.EventService;
 import ewm.exception.ConditionsNotMetException;
