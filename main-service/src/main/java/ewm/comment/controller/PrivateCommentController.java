@@ -44,7 +44,7 @@ public class PrivateCommentController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComment(@PathVariable Long userId, @PathVariable Long eventId,
                               @PathVariable Long commentId) throws ConditionsNotMetException, NotFoundException {
-        service.UserDeleteComment(userId, eventId, commentId);
+        service.userDeleteComment(userId, eventId, commentId);
     }
 
     @GetMapping

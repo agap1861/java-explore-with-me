@@ -21,7 +21,7 @@ public class AdminCommentController {
     @DeleteMapping("/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComment(@PathVariable Long commentId) throws NotFoundException {
-        commentService.AdminDeleteComment(commentId);
+        commentService.adminDeleteComment(commentId);
     }
 
     @GetMapping

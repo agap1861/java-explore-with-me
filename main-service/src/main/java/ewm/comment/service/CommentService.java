@@ -8,15 +8,15 @@ import java.util.List;
 
 public interface CommentService {
 
-    Comment postComment(Comment comment,Long authorId, Long eventId) throws NotFoundException, ConditionsNotMetException;
+    Comment postComment(Comment comment, Long authorId, Long eventId) throws NotFoundException, ConditionsNotMetException;
 
-    Comment patchComment(Long authorId,Long eventId,Long commentId,Comment comment) throws NotFoundException, ConditionsNotMetException;
+    Comment patchComment(Long authorId, Long eventId, Long commentId, Comment comment) throws NotFoundException, ConditionsNotMetException;
 
     Comment getCommentById(Long commentId) throws NotFoundException;
 
-    void UserDeleteComment(Long  authorId, Long eventId, Long commentId) throws NotFoundException, ConditionsNotMetException;
+    void userDeleteComment(Long authorId, Long eventId, Long commentId) throws NotFoundException, ConditionsNotMetException;
 
-    void AdminDeleteComment(Long commentId) throws NotFoundException;
+    void adminDeleteComment(Long commentId) throws NotFoundException;
 
     List<Comment> getAllCommentForAdminByEventId(Long eventId) throws NotFoundException;
 

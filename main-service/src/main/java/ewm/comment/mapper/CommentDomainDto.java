@@ -12,13 +12,13 @@ import org.mapstruct.Mapping;
 
 import java.time.LocalDateTime;
 
-@Mapper(componentModel = "spring",uses = {UserDomainDto.class, EventDomainDto.class})
+@Mapper(componentModel = "spring", uses = {UserDomainDto.class, EventDomainDto.class})
 public interface CommentDomainDto {
 
     @Mapping(target = "created", expression = "java(mapTime())")
     Comment toDomain(NewCommentDto dto);
 
-    default LocalDateTime mapTime(){
+    default LocalDateTime mapTime() {
         return LocalDateTime.now();
     }
 
