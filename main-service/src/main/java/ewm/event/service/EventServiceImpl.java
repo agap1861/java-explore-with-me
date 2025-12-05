@@ -145,6 +145,7 @@ public class EventServiceImpl implements EventService {
             throw new ValidateException("end must be after start");
         }
         List<Event> events = storage.getEventsByPublicFilter(filter);
+
         events.stream()
                 .map(event -> {
                     HitDto dto = new HitDto();
@@ -155,11 +156,14 @@ public class EventServiceImpl implements EventService {
                     return dto;
                 })
                 .forEach(client::postStat);
+
         List<String> uris = events.stream()
                 .map(event -> "/events/" + event.getId())
                 .toList();
+
         List<StatDto> stats = client.getStats(LocalDateTime.now().minusYears(1),
                 LocalDateTime.now().plusYears(1), uris, false);
+
         Map<Long, Long> views = stats.stream()
                 .collect(Collectors.toMap(
                         s -> s.extractIdFromUri(s.getUri()),
