@@ -3,10 +3,13 @@ package ewm.comment.service;
 import ewm.comment.domain.Comment;
 import ewm.comment.storage.CommentStorage;
 
+import ewm.event.domain.Event;
+import ewm.event.domain.EventState;
 import ewm.event.service.EventService;
 import ewm.exception.ConditionsNotMetException;
 import ewm.exception.NotFoundException;
 
+import ewm.user.domain.User;
 import ewm.user.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,25 +27,24 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public Comment postComment(Comment comment, Long authorId, Long eventId) throws NotFoundException, ConditionsNotMetException {
- /*       Event event = eventService.getEventById(eventId);
+        var event = eventService.getEventById(eventId);
         if (!event.getState().equals(EventState.PUBLISHED)) {
             throw new ConditionsNotMetException("event must be published");
         }
         User author = userService.getUserById(authorId);
         comment.setAuthor(author);
         comment.setEvent(event);
-        return storage.save(comment);*/
-        return null;
+        return storage.save(comment);
     }
 
     @Override
     @Transactional
     public Comment patchComment(Long authorId, Long eventId, Long commentId, Comment patchComment) throws NotFoundException, ConditionsNotMetException {
-/*        Comment comment = getCommentById(commentId);
+        Comment comment = getCommentById(commentId);
         validateAuthorAndEvent(comment, authorId, eventId);
         comment.setText(patchComment.getText());
-        return storage.save(comment);*/
-        return null;
+        return storage.save(comment);
+
     }
 
     @Override
