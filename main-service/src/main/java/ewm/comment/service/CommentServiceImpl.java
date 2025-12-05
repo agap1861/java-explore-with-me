@@ -2,12 +2,9 @@ package ewm.comment.service;
 
 import ewm.comment.domain.Comment;
 import ewm.comment.storage.CommentStorage;
-import ewm.event.domain.Event;
-import ewm.event.domain.EventState;
 import ewm.event.service.EventService;
 import ewm.exception.ConditionsNotMetException;
 import ewm.exception.NotFoundException;
-import ewm.user.domain.User;
 import ewm.user.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
