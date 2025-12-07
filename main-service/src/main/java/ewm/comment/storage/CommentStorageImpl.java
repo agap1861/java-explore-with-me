@@ -1,8 +1,6 @@
 package ewm.comment.storage;
 
-import ewm.comment.domain.Comment;
 import ewm.comment.entity.CommentEntity;
-import ewm.comment.mapper.CommentDomainEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -13,12 +11,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CommentStorageImpl implements CommentStorage {
     private final CommentJpaRepository storage;
-    private final CommentDomainEntity mapper;
 
     @Override
-    public Comment save(Comment domain) {
-        CommentEntity entity = storage.save(mapper.toEntity(domain));
-        return mapper.toDomain(entity);
+    public CommentEntity save(CommentEntity domain) {
+        return storage.save(domain);
     }
 
     @Override
@@ -32,16 +28,13 @@ public class CommentStorageImpl implements CommentStorage {
     }
 
     @Override
-    public Optional<Comment> getById(Long id) {
-        Optional<CommentEntity> entity = storage.findById(id);
-        return entity.map(mapper::toDomain);
+    public Optional<CommentEntity> getById(Long id) {
+        return storage.findById(id);
     }
 
     @Override
-    public List<Comment> getAllCommentsByEventId(Long eventId) {
-        List<CommentEntity> commentEntities = storage.findAllByEventId(eventId);
-        return commentEntities.stream()
-                .map(mapper::toDomain)
-                .toList();
+    public List<CommentEntity> getAllCommentsByEventId(Long eventId) {
+        return storage.findAllByEventId(eventId);
+
     }
 }
